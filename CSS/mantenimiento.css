@@ -1,0 +1,182 @@
+
+.contador {
+    font-weight: 600;
+    padding: 6px 10px;
+    border-radius: 6px;
+    display: inline-block;
+    font-size: 0.92rem;
+}
+.contador.verde {
+    background: #e2fbe2;
+    color: #228B22;
+}
+.contador.naranja {
+    background: #fff4d6;
+    color: #d98c00;
+}
+.contador.rojo {
+    background: #fbe2e2;
+    color: #b22222;
+}
+
+/* Modal styles */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    z-index: 999;
+    left: 0; top: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.25);
+    justify-content: center;
+    align-items: center;
+}
+.modal-container {
+    background: #fff;
+    border-radius: 16px;
+    width: 1000px;
+    max-width: 98vw;
+    min-height: 500px;
+    max-height: 93vh;
+    box-shadow: 0 12px 32px rgba(0,0,0,0.10);
+    padding: 32px 32px 24px 32px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.modal-close {
+    position: absolute;
+    right: 22px;
+    top: 18px;
+    font-size: 32px;
+    color: #aaa;
+    cursor: pointer;
+}
+.modal-close:hover {
+    color: #5c1434;
+}
+.modal-title {
+    text-align: center;
+    color: #5c1434;
+    margin-bottom: 22px;
+    font-size: 1.7rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    justify-content: center;
+}
+.modal-details-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    width: 100%;
+    margin-bottom: 20px;
+}
+.modal-field {
+    background: #f7f7f7;
+    border: 1.7px solid #c5b895;
+    border-radius: 9px;
+    padding: 20px;
+    font-size: 0.95rem;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+}
+.modal-label {
+    font-size: 0.85rem;
+    color: #5c1434;
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+.modal-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    margin-top: 15px;
+}
+.mto-btn,
+.btn-descarga,
+.btn-cancelar,
+.btn-ocultar {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #5c1434;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 0.95rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    text-decoration: none;
+}
+
+.mto-btn:hover,
+.btn-descarga:hover,
+.btn-cancelar:hover,
+.btn-ocultar:hover {
+    background: #c5b895;
+    color: #111;
+}
+
+/* Centrado del botón de ocultar/mostrar */
+.historial-toggle {
+    display: flex;
+    justify-content: center;
+}
+
+
+.btn-descarga:hover {
+    background: #c5b895;
+    color: #111;
+}
+
+.mto-btn,
+.btn-descarga,
+.btn-cancelar,
+.btn-ocultar {
+    transition: all 0.3s ease;
+}
+
+.mto-btn:hover,
+.btn-descarga:hover,
+.btn-cancelar:hover,
+.btn-ocultar:hover {
+    transform: scale(1.05);
+}
+
+.modal-label-custom {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #5c1434;
+    margin-bottom: 6px;
+}
+
+.modal-input-custom {
+    font-size: 0.95rem;
+    padding: 10px;
+    border-radius: 6px;
+    background-color: #fff;
+    color: #333;
+    font-family: inherit;
+    width: 200px;
+}
+.modal-input-textarea {
+    font-size: 0.95rem;
+    padding: 10px;
+    border-radius: 6px;
+    background-color: #fff;
+    color: #333;
+    font-family: inherit;
+    width: 700px;
+    height: 100px;
+}
+
+
+.modal-input-custom:focus {
+    outline: none;
+    border-color: #5c1434;
+    box-shadow: 0 0 0 2px rgba(92, 20, 52, 0.1);
+}
+

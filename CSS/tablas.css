@@ -1,0 +1,393 @@
+/* Contenedor de tabla con scroll */
+.table-container {
+    max-width: 100%;
+    overflow: auto;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin: 20px 0;
+    background: white;
+    max-height: 75vh;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+/* Estilo de tabla */
+.scrollable-table {
+    width: max-content;
+    min-width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+.scrollable-table th {
+    background-color: #5c1434;
+    color: white;
+    position: sticky;
+    top: 0;
+    padding: 12px 15px;
+    text-align: left;
+    font-weight: normal;
+    white-space: nowrap;
+}
+
+.scrollable-table td {
+    padding: 10px 15px;
+    border-bottom: 1px solid #f0f0f0;
+    vertical-align: middle;
+}
+
+/* Estados (diseño original) */
+.estado {
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 12px;
+    color: white;
+    display: inline-block;
+    min-width: 60px;
+    text-align: center;
+}
+
+.estado.bueno {
+    background-color: #4CAF50;
+}
+
+.estado.regular {
+    background-color: #FFC107;
+    color: #333;
+}
+
+.estado.malo {
+    background-color: #F44336;
+}
+
+/* Botones de acción (diseño original) */
+.acciones {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-editar, .btn-eliminar {
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 13px;
+    transition: all 0.3s;
+}
+
+.btn-editar {
+    background-color: #2196F3;
+}
+
+.btn-editar:hover {
+    background-color: #0b7dda;
+}
+
+.btn-eliminar {
+    background-color: #f44336;
+}
+
+.btn-eliminar:hover {
+    background-color: #da190b;
+}
+
+/* Observaciones */
+.observaciones {
+    max-width: 150px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.observaciones:hover {
+    white-space: normal;
+    overflow: visible;
+    position: relative;
+    z-index: 100;
+    background: white;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+/* Scrollbar */
+.table-container::-webkit-scrollbar {
+    height: 8px;
+    width: 8px;
+}
+
+.table-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.table-container::-webkit-scrollbar-thumb {
+    background: #5c1434;
+    border-radius: 4px;
+}
+
+.table-container::-webkit-scrollbar-thumb:hover {
+    background: #4a102b;
+}
+
+/* Estilos para el encabezado con buscador */
+.table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.search-container {
+    position: relative;
+    flex-grow: 1;
+    max-width: 400px;
+}
+
+.search-input {
+    width: 100%;
+    padding: 10px 15px 10px 40px;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    font-size: 14px;
+    transition: all 0.3s;
+    background-color: #f9f9f9;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: #5c1434;
+    box-shadow: 0 0 5px rgba(92, 20, 52, 0.3);
+    background-color: white;
+}
+
+.search-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #777;
+}
+
+/* Estilo para el highlight de búsqueda */
+.highlight {
+    background-color: #FFEB3B;
+    color: #000;
+    font-weight: bold;
+    padding: 1px 3px;
+    border-radius: 2px;
+}
+
+/* Estilo para los estados (asegúrate que sea más específico) */
+td .estado {
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 12px;
+    color: white;
+    display: inline-block;
+    min-width: 60px;
+    text-align: center;
+}
+
+/* Clases de estado específicas */
+.estado.bueno { background-color: #4CAF50; }
+.estado.regular { background-color: #FFC107; color: #333; }
+.estado.malo { background-color: #F44336; }
+
+/*Tabla Proveedores*/
+
+/* Estilos específicos para tabla de proveedores */
+.table-container {
+    max-width: 100%;
+    overflow: auto;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin: 20px 0;
+    background: white;
+    max-height: 75vh;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.scrollable-table {
+    width: max-content;
+    min-width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+.scrollable-table th {
+    background-color: #5c1434;
+    color: white;
+    position: sticky;
+    top: 0;
+    padding: 12px 15px;
+    text-align: left;
+    font-weight: normal;
+    white-space: nowrap;
+}
+
+.scrollable-table td {
+    padding: 10px 15px;
+    border-bottom: 1px solid #f0f0f0;
+    vertical-align: middle;
+}
+
+/* Columnas específicas */
+#providersTable th:nth-child(1) { width: 50px; } /* ID */
+#providersTable th:nth-child(2) { width: 200px; } /* Razón Social */
+#providersTable th:nth-child(3) { width: 200px; } /* Dirección */
+#providersTable th:nth-child(4), 
+#providersTable th:nth-child(5) { width: 120px; } /* Teléfonos */
+#providersTable th:nth-child(7),
+#providersTable th:nth-child(12) { width: 100px; } /* Estados */
+
+/* Acciones */
+.acciones {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-editar, .btn-eliminar {
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 13px;
+    transition: all 0.3s;
+}
+
+.btn-editar {
+    background-color: #2196F3;
+}
+
+.btn-editar:hover {
+    background-color: #0b7dda;
+}
+
+.btn-eliminar {
+    background-color: #f44336;
+}
+
+.btn-eliminar:hover {
+    background-color: #da190b;
+}
+
+/* Búsqueda */
+.search-container {
+    position: relative;
+    margin-bottom: 20px;
+    max-width: 400px;
+}
+
+.search-input {
+    width: 100%;
+    padding: 10px 15px 10px 40px;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    font-size: 14px;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: #5c1434;
+    box-shadow: 0 0 5px rgba(92, 20, 52, 0.3);
+}
+
+.search-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #777;
+}
+
+/* Highlight de búsqueda */
+.highlight {
+    background-color: #FFEB3B;
+    color: #000;
+    font-weight: bold;
+    padding: 1px 3px;
+    border-radius: 2px;
+}
+
+/* Scrollbar */
+.table-container::-webkit-scrollbar {
+    height: 8px;
+    width: 8px;
+}
+
+.table-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.table-container::-webkit-scrollbar-thumb {
+    background: #5c1434;
+    border-radius: 4px;
+}
+ /* Estilos adicionales para estados */
+ .estado {
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 12px;
+    color: white;
+    display: inline-block;
+    min-width: 60px;
+    text-align: center;
+}
+.estado.activo {
+    background-color: #4CAF50 !important;
+}
+.estado.inactivo {
+    background-color: #F44336 !important;
+}
+.estado.activo-contacto {
+    background-color: #4CAF50 !important;
+}
+.estado.inactivo-contacto {
+    background-color: #F44336 !important;
+}
+.highlight .estado {
+    background-color: inherit !important;
+    color: inherit !important;
+}
+
+/*Tabla partidas*/
+
+ /* Estilos adicionales específicos para partidas */
+ .estado {
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 12px;
+    color: white;
+    display: inline-block;
+    min-width: 60px;
+    text-align: center;
+}
+.highlight .estado {
+    background-color: inherit !important;
+    color: inherit !important;
+}
+
+/* Estilos específicos para tabla de partidas */
+#partidasTable th:nth-child(1) { width: 50px; } /* ID */
+#partidasTable th:nth-child(2), 
+#partidasTable th:nth-child(4) { width: 120px; } /* Números */
+#partidasTable th:nth-child(3),
+#partidasTable th:nth-child(5) { width: 250px; } /* Nombres */
+
+/* Ajustar columnas para mejor visualización */
+#partidasTable td:nth-child(3),
+#partidasTable td:nth-child(5) {
+    max-width: 250px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+#partidasTable td:nth-child(3):hover,
+#partidasTable td:nth-child(5):hover {
+    white-space: normal;
+    overflow: visible;
+    position: relative;
+    z-index: 100;
+    background: white;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}

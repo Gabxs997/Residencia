@@ -1,0 +1,120 @@
+/* Estilos generales para el body y html */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #e7e7e7;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Estilos para el header */
+.headerPanel {
+    background-color: #5c1434;
+    color: white;
+    padding: 20px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.menu-icon {
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding-right: 50px;
+}
+
+.user-info i {
+    font-size: 20px;
+    color: #5c1434;
+    background-color: white;
+    border-radius: 30px;
+    padding: 8px 10px;
+}
+
+.user-info span {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+/* Estilos para el menú lateral */
+.sidebar {
+    width: 250px; /* Ancho del menú */
+    height: 100vh; /* Altura completa de la pantalla */
+    background-color: #5c1434;
+    position: fixed;
+    top: 0;
+    left: -250px; /* Oculta el menú por defecto */
+    transition: left 0.3s ease; /* Transición suave */
+    z-index: 1000; /* Asegura que el menú esté por encima del contenido */
+}
+
+.sidebar.active {
+    left: 0; /* Muestra el menú */
+}
+
+.menu-icon-close {
+    padding: 20px;
+    text-align: right;
+    color: white;
+    cursor: pointer;
+}
+
+.menu-icon-close i {
+    font-size: 24px;
+    padding-top: 5px;
+}
+
+.sidebar-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar-menu li {
+    margin: 0;
+}
+
+.sidebar-menu li a {
+    display: block;
+    padding: 15px 20px;
+    color: white;
+    text-decoration: none;
+    transition: background-color 0.3s ease; /* Transición suave */
+}
+
+.sidebar-menu li a:hover {
+    background-color: #4a102a; /* Cambia el color al pasar el mouse */
+}
+
+.sidebar-menu li a i {
+    margin-right: 10px; /* Espacio entre el ícono y el texto */
+}
+
+/* Estilos para el contenido principal */
+.main-content {
+    flex: 1;
+    padding: 20px;
+    background-color: white;
+    margin: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: margin-left 0.3s ease; /* Transición suave */
+}
+
+.main-content.active {
+    margin-left: 250px; /* Desplaza el contenido cuando el menú está activo */
+}
+
+
+

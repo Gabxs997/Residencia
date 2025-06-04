@@ -1,0 +1,104 @@
+/* Estilos generales */
+html, body {
+    height: 100%;
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #e7e7e7;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Header */
+.headerPanel {
+    background-color: #5c1434;
+    color: white;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.menu-icon {
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding-right: 50px;
+}
+
+.user-info span {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.user-info i {
+    font-size: 20px;
+    background: white;
+    color: #5c1434;
+    padding: 8px 10px;
+    border-radius: 30px;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 250px;
+    height: 100vh;
+    background-color: #5c1434;
+    position: fixed;
+    top: 0;
+    left: -250px;
+    transition: left 0.3s ease;
+    z-index: 1000;
+}
+
+.sidebar.active {
+    left: 0;
+}
+
+.menu-icon-close {
+    padding: 20px;
+    text-align: right;
+    color: white;
+    cursor: pointer;
+}
+
+.sidebar-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar-menu li a {
+    display: block;
+    padding: 15px 20px;
+    color: white;
+    text-decoration: none;
+}
+
+.sidebar-menu li a:hover {
+    background-color: #4a102a;
+}
+
+.sidebar-menu li a i {
+    margin-right: 10px;
+}
+
+/* Contenido principal */
+.main-content {
+    flex: 1;
+    padding: 20px;
+    margin: 20px;
+    border-radius: 10px;
+    background-color: white;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: margin-left 0.3s ease;
+}
+
+.main-content.active {
+    margin-left: 250px;
+}

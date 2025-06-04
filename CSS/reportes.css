@@ -1,0 +1,288 @@
+/*Sección de bien*/
+/* ----------- MODAL GENERAL ----------- */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    z-index: 999;
+    left: 0; top: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.25);
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-container {
+    background: #fff;
+    border-radius: 16px;
+    width: 1000px;
+    max-width: 98vw;
+    min-height: 500px;
+    max-height: 93vh;
+    box-shadow: 0 12px 32px rgba(0,0,0,0.10);
+    padding: 32px 32px 24px 32px;
+    position: relative;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* ----------- BOTÓN DE CERRAR ----------- */
+.modal-close {
+    position: absolute;
+    right: 22px;
+    top: 18px;
+    font-size: 32px;
+    color: #aaa;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.modal-close:hover {
+    color: #5c1434;
+}
+
+/* ----------- TÍTULO DEL MODAL ----------- */
+.modal-title {
+    text-align: center;
+    color: #5c1434;
+    margin-bottom: 22px;
+    font-size: 1.7rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    justify-content: center;
+}
+
+/* ----------- CONTENIDO: 3 COLUMNAS ----------- */
+.modal-details-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px 18px;
+    width: 100%;
+    margin: 0 0 20px 0;
+    /* Scroll si hay mucho contenido */
+    max-height: 54vh;
+    overflow-y: auto;
+}
+
+/* ----------- CAJA POR CAMPO ----------- */
+.modal-field {
+    background: #f7f7f7;
+    border: 1.7px solid #c5b895;
+    border-radius: 9px;
+    padding: 14px 14px 10px 14px;
+    min-height: 56px;
+    font-size: 1.01rem;
+    display: flex;
+    flex-direction: column;
+    word-break: break-word;
+    transition: box-shadow 0.2s;
+}
+.modal-field:hover {
+    box-shadow: 0 2px 10px #eadfc8a8;
+}
+
+/* ----------- ETIQUETA Y VALOR ----------- */
+.modal-label {
+    color: #5c1434;
+    font-weight: 700;
+    margin-bottom: 2px;
+    font-size: 1.02rem;
+    letter-spacing: .2px;
+}
+
+.modal-value {
+    color: #222;
+    font-weight: 400;
+    font-size: 0.99rem;
+}
+.modal-vacio {
+    color: #888;
+    font-style: italic;
+}
+
+/* ----------- BOTONES DESCARGA ----------- */
+.modal-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    margin-top: 15px;
+}
+
+.btn-descarga {
+    background: #5c1434;
+    color: #fff;
+    border: none;
+    padding: 11px 27px;
+    border-radius: 6px;
+    font-size: 1.05rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.23s, box-shadow 0.23s, color 0.23s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.btn-descarga:hover {
+    background: #c5b895;
+    color: #111;
+    box-shadow: 0 2px 12px #d1c2a3cc;
+}
+
+/* ----------- BOTÓN DE REPORTE EN TABLA ----------- */
+.btn-reporte {
+    background: #5c1434;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 500;
+    padding: 8px 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    transition: background 0.25s, box-shadow 0.2s, color 0.2s;
+    box-shadow: 0 2px 12px #d1c2a334;
+}
+.btn-reporte:hover {
+    background: #c5b895;
+    color: #111;
+    box-shadow: 0 2px 12px #b6b49fcc;
+}
+
+/* ----------- SCROLL PERSONALIZADO EN MODAL ----------- */
+.modal-details-grid::-webkit-scrollbar {
+    width: 10px;
+    background: #eceae4;
+    border-radius: 6px;
+}
+.modal-details-grid::-webkit-scrollbar-thumb {
+    background: #c5b895;
+    border-radius: 6px;
+}
+.modal-details-grid {
+    scrollbar-width: thin;
+    scrollbar-color: #c5b895 #eceae4;
+}
+
+/*Sección de Listado*/
+/* --- Botones de descarga globales --- */
+.descarga-global-buttons {
+    display: flex;
+    gap: 18px;
+    margin-bottom: 24px;
+    justify-content: flex-end;
+}
+
+.btn-descarga {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 11px 20px;
+    background: #5c1434;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(92, 20, 52, 0.08);
+    transition: background 0.25s, transform 0.2s, box-shadow 0.22s;
+}
+.btn-descarga i {
+    font-size: 1.15em;
+}
+.btn-descarga:hover, .btn-descarga:focus {
+    background: #c5b895;
+    color: #5c1434;
+    transform: translateY(-2px) scale(1.045);
+    box-shadow: 0 4px 16px rgba(92, 20, 52, 0.13);
+}
+
+/* --- Tabla principal del listado --- */
+#listadoTable {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.98rem;
+    background: #fff;
+    margin-bottom: 30px;
+    table-layout: auto;
+}
+#listadoTable thead th {
+    background: #5c1434;
+    color: #fff;
+    font-weight: 600;
+    padding: 12px 8px;
+    border-bottom: 2px solid #c5b895;
+    text-align: left;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    font-size: 1em;
+}
+#listadoTable tbody td {
+    padding: 10px 8px;
+    border-bottom: 1px solid #e4e0e0;
+    vertical-align: middle;
+    background: #f9f9f9;
+}
+#listadoTable tbody tr:nth-child(even) td {
+    background: #f5f1e9;
+}
+#listadoTable tbody tr:hover td {
+    background: #f8e8da;
+    color: #5c1434;
+    transition: background 0.2s;
+}
+
+.btn-filtro, .btn-filtro-reset {
+    padding: 9px 18px;
+    border: none;
+    border-radius: 5px;
+    background-color: #c5b895;
+    color: #5c1434;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: background .25s, color .25s;
+    text-decoration: none;
+}
+.btn-filtro:hover, .btn-filtro-reset:hover {
+    background: #5c1434;
+    color: #fff;
+}
+.filtro-activo {
+    color: #222;
+    background: #f0ebdd;
+    padding: 7px 16px;
+    border-radius: 7px;
+    margin-left: 10px;
+    font-size: 15px;
+    border: 1px solid #c5b895;
+}
+
+@media (max-width: 1000px) {
+    .descarga-global-buttons {
+        flex-direction: column;
+        gap: 8px;
+        align-items: stretch;
+    }
+    #listadoTable, .table-container {
+        overflow-x: auto;
+    }
+    #listadoTable thead th, #listadoTable tbody td {
+        white-space: nowrap;
+        font-size: 0.93rem;
+    }
+}
+
+
+
+
+
+

@@ -1,0 +1,33 @@
+.contenedorimagenes{
+    display: flex;
+    justify-content: space-between;
+    width: 100%; /* Cambia a 100% para que se ajuste al ancho del contenedor */
+    max-width: 1270px; /* Establece un ancho máximo */
+    background-color: white;
+    height: 130px;
+    align-items: center; /* Centra verticalmente */
+    margin: 0 auto; /* Centra el contenedor */
+    padding: 0 20px; /* Añade un padding para evitar que el contenido toque los bordes */
+}
+
+.imagen1{
+    width: 300px;
+}
+
+.imagen2{
+  width: 400px;
+}
+
+.texto-centrado {
+    flex-grow: 1; /* Hace que el texto ocupe el espacio disponible */
+    text-align: center; /* Centra el texto horizontalmente */
+    font-size: 30px; /* Tamaño del texto */
+    font-weight: bold; /* Negrita */
+    color: #800a3c; /* Color del texto */
+    font-family: 'Times New Roman', Times, serif;
+}
+
+.texto-centrado span{
+    font-size: 26;
+    color: #c5b895;
+}
