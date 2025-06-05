@@ -160,7 +160,7 @@
     background-color: #fff;
     color: #333;
     font-family: inherit;
-    width: 200px;
+    width: 325px;
 }
 .modal-input-textarea {
     font-size: 0.95rem;
@@ -169,7 +169,7 @@
     background-color: #fff;
     color: #333;
     font-family: inherit;
-    width: 700px;
+    width: 90%;
     height: 100px;
 }
 
@@ -179,4 +179,27 @@
     border-color: #5c1434;
     box-shadow: 0 0 0 2px rgba(92, 20, 52, 0.1);
 }
+
+.btn-registrar{
+    background: #5c1434;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 500;
+    padding: 8px 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    transition: background 0.25s, box-shadow 0.2s, color 0.2s;
+    box-shadow: 0 2px 12px #d1c2a334;
+}
+
+.btn-registrar:hover {
+    background: #c5b895;
+    color: #111;
+    box-shadow: 0 2px 12px #b6b49fcc;
+}
+
 

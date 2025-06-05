@@ -39,7 +39,7 @@
             <ul>
                 <li><a href="reportesT/bienT.php">Tipo bien</a></li>
                 <li><a href="reportesT/listadoT.php">Tipo listado</a></li>
-                <li><a href="reportesT/mantenimientoT.php">Mantenimiento</a></li>
+                <li><a href="reportesT/solicitarMantenimiento.php">Solicitar mantenimiento</a></li>
             </ul>
         </div>
     </main>

@@ -1,0 +1,320 @@
+.main-content {
+    padding: 40px 60px;
+}
+.search-bar {
+    margin: 20px 0;
+    display: flex;
+    justify-content: space-between;
+    gap: 14px;
+    flex-wrap: wrap;
+}
+.search-bar select, .search-bar input {
+    padding: 10px;
+    font-size: 1rem;
+    border: 1.5px solid #c5b895;
+    border-radius: 6px;
+    width: 250px;
+}
+
+.btn-buscar{
+    background: #5c1434;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 500;
+    padding: 8px 20px;
+    cursor: pointer;
+    margin-left: 30px;
+    align-items: center;
+    gap: 7px;
+    transition: background 0.25s, box-shadow 0.2s, color 0.2s;
+    box-shadow: 0 2px 12px #d1c2a334;
+}
+
+.btn-buscar:hover{
+    background: #c5b895;
+    color: #111;
+    box-shadow: 0 2px 12px #b6b49fcc;
+}
+
+.search-bar button {
+    background-color: #5c1434;
+    color: white;
+    border: none;
+    padding: 10px 18px;
+    font-size: 0.95rem;
+    border-radius: 6px;
+    cursor: pointer;
+}
+.search-bar button:hover {
+    background-color: #c5b895;
+    color: #111;
+}
+table {
+    width: 100%;
+    background: white;
+    border-collapse: collapse;
+    margin-top: 20px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+th, td {
+    padding: 14px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+thead {
+    background-color: #5c1434;
+    color: white;
+}
+.btn-solicitar {
+    background: #5c1434;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 500;
+    padding: 8px 20px;
+    cursor: pointer;
+    margin-left: 30px;
+    align-items: center;
+    gap: 7px;
+    transition: background 0.25s, box-shadow 0.2s, color 0.2s;
+    box-shadow: 0 2px 12px #d1c2a334;
+}
+.btn-solicitar:hover {
+    background-color: #c5b895;
+    color: #111;
+    box-shadow: 0 2px 12px #b6b49fcc;
+}
+.badge {
+    font-weight: 600;
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+}
+.pendiente {
+    background: #fbe2e2;
+    color: #b22222;
+}
+.enproceso {
+    background: #fff4d6;
+    color: #d98c00;
+}
+.terminado {
+    background: #e2fbe2;
+    color: #228B22;
+}
+.highlight {
+    background-color: yellow;
+}
+
+.search-container {
+    position: relative;
+    flex-grow: 1;
+    max-width: 400px;
+}
+
+.search-sm{
+    width: 100%;
+    padding: 10px 15px 10px 40px;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    font-size: 14px;
+    transition: all 0.3s;
+    background-color: #f9f9f9;
+}
+
+.search-sm:focus {
+    outline: none;
+    border-color: #5c1434;
+    box-shadow: 0 0 5px rgba(92, 20, 52, 0.3);
+    background-color: white;
+}
+
+.search-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #777;
+}
+
+.form-sm{
+    width: 50%;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    text-align: center;   /* Centrar horizontalmente los elementos hijos */ 
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.select-sm{
+    width: auto;
+    min-width: 160px;
+    max-width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+    background-color: #fff;
+}
+
+.back-btn {
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+    margin-right: 15px;
+    border-radius: 20px;
+    padding: 10px;
+    background-color: #5c1434;
+    transition: background-color 0.3s,color 0.3s;
+}
+
+.back-btn:hover {
+    color: white;
+    border-radius: 20px;
+    padding: 10px;
+    background-color: #c5b895;
+}
+
+.modal-solicitud-overlay {
+    display: none;
+    position: fixed;
+    z-index: 999;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.25);
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-solicitud-container {
+    background: #fff;
+    border-radius: 16px;
+    width: 1000px;
+    max-width: 98vw;
+    min-height: 420px;
+    max-height: 93vh;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
+    padding: 32px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.modal-solicitud-close {
+    position: absolute;
+    right: 22px;
+    top: 18px;
+    font-size: 32px;
+    color: #aaa;
+    cursor: pointer;
+}
+
+.modal-solicitud-close:hover {
+    color: #5c1434;
+}
+
+.modal-solicitud-title {
+    text-align: center;
+    color: #5c1434;
+    margin-bottom: 24px;
+    font-size: 1.7rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    justify-content: center;
+}
+
+.modal-solicitud-flex {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 20px;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.modal-solicitud-field {
+    background: #f7f7f7;
+    border: 1.7px solid #c5b895;
+    border-radius: 9px;
+    padding: 20px;
+    font-size: 0.95rem;
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+}
+
+.modal-solicitud-label {
+    font-size: 0.85rem;
+    color: #5c1434;
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+.modal-solicitud-input,
+.modal-solicitud-textarea {
+    font-size: 0.95rem;
+    padding: 10px;
+    border-radius: 6px;
+    background-color: #fff;
+    color: #333;
+    font-family: inherit;
+    border: 1px solid #ccc;
+}
+
+.modal-solicitud-textarea {
+    width: 100%;
+    min-height: 130px;
+    resize: vertical;
+    box-sizing: border-box;
+}
+
+.modal-solicitud-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    margin-top: 15px;
+}
+
+.btn-solicitud-guardar,
+.btn-solicitud-cancelar {
+    background: #5c1434;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 0.95rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-solicitud-guardar:hover,
+.btn-solicitud-cancelar:hover {
+    background: #c5b895;
+    color: #111;
+}
+
+.btn-cancelar {
+    background-color: #b22222;
+    color: white;
+    padding: 8px 14px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background 0.3s;
+}
+.btn-cancelar:hover {
+    background-color: #8b0000;
+}
+
+
