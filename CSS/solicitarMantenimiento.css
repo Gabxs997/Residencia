@@ -317,4 +317,40 @@ thead {
     background-color: #8b0000;
 }
 
+.usuario-area-info {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    padding: 15px 20px;
+    border-radius: 8px;
+    margin-bottom: 25px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    font-size: 1rem;
+    color: #333;
+    width: 35%;
+}
+.usuario-area-info p {
+    margin: 12px 0;
+}
+.usuario-area-info strong {
+    color: #5c1434;
+}
+.logout-container {
+    text-align: center;
+    margin-top: 40px;
+}
+.btn-cerrar-sesion {
+    background-color: #5c1434;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+.btn-cerrar-sesion:hover {
+    background-color: #7c1a4a;
+}
+
+
 

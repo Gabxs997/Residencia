@@ -13,6 +13,7 @@ $articulos = [];
 while ($row = mysqli_fetch_assoc($result)) {
     $articulos[] = $row;
 }
+
 ?>
 <!DOCTYPE html>
 <html lang="es">

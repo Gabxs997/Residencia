@@ -391,3 +391,13 @@ td .estado {
     background: white;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
 }
+
+/*Flex para el modulo crear usuario del buscador y boton*/
+.usuarios-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+

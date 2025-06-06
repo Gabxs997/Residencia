@@ -1,27 +1,31 @@
 <?php
+session_start();
 require_once __DIR__ . '/../../config/conexion.php';
 
-// Obtener áreas
-$areas = [];
-$resAreas = mysqli_query($conectar, "SELECT id, nombre_area FROM ubicaciones ORDER BY nombre_area");
-while ($row = mysqli_fetch_assoc($resAreas)) $areas[] = $row;
-
-// ¿Área seleccionada?
-$area_id = isset($_GET['area_id']) ? intval($_GET['area_id']) : 0;
-$articulos = [];
-
-if ($area_id > 0) {
-    $resArt = mysqli_query($conectar, "
-        SELECT a.id, a.descripcion, u.nombre_area,
-            (SELECT estatus FROM solicitudes_mantenimiento sm WHERE sm.articulo_id = a.id ORDER BY sm.id DESC LIMIT 1) AS estatus
-        FROM articulos a
-        INNER JOIN ubicaciones u ON a.ubicacion = u.id
-        WHERE a.ubicacion = $area_id
-    ");
-    while ($row = mysqli_fetch_assoc($resArt)) $articulos[] = $row;
+if (!isset($_SESSION['area_id']) || !isset($_SESSION['usuario'])) {
+    header('Location: ../../Login/loginUsuario.php');
+    exit;
 }
 
-// Funcíon para traducir estatus
+$area_id = $_SESSION['area_id'];
+$usuario = $_SESSION['usuario'];
+
+// Obtener nombre del área
+$resArea = mysqli_query($conectar, "SELECT nombre_area FROM ubicaciones WHERE id = $area_id LIMIT 1");
+$area = mysqli_fetch_assoc($resArea);
+$nombre_area = $area ? $area['nombre_area'] : 'Área desconocida';
+
+// Obtener artículos del área
+$articulos = [];
+$resArt = mysqli_query($conectar, "
+    SELECT a.id, a.descripcion, u.nombre_area,
+        (SELECT estatus FROM solicitudes_mantenimiento sm WHERE sm.articulo_id = a.id ORDER BY sm.id DESC LIMIT 1) AS estatus
+    FROM articulos a
+    INNER JOIN ubicaciones u ON a.ubicacion = u.id
+    WHERE a.ubicacion = $area_id
+");
+while ($row = mysqli_fetch_assoc($resArt)) $articulos[] = $row;
+
 function mostrarEstatus($valor)
 {
     return match ($valor) {
@@ -31,6 +35,7 @@ function mostrarEstatus($valor)
     };
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="es">
 
@@ -62,19 +67,12 @@ function mostrarEstatus($valor)
     <main class="main-content">
         <h1><a href="../reportesT.php" class="back-btn"><i class="fas fa-arrow-left"></i></a> Solicitar mantenimiento</h1> <br><br><br><br>
 
-        <form method="GET" class="form-sm">
-            <label for="area_id">Selecciona un área:</label>
-            <select class="select-sm" name="area_id" id="area_id" required>
-                <option value="">-- Elige un área --</option>
-                <?php foreach ($areas as $area): ?>
-                    <option value="<?= $area['id'] ?>" <?= $area_id == $area['id'] ? 'selected' : '' ?>>
-                        <?= htmlspecialchars($area['nombre_area']) ?>
-                    </option>
-                <?php endforeach; ?>
-            </select>
-            <button type="submit" class="btn-sm btn-buscar"><i class="fas fa-search"></i> Buscar</button>
-        </form>
-        <br><br><br><br>
+        <div class="usuario-area-info">
+            <p><strong>Usuario:</strong> <?= htmlspecialchars($_SESSION['usuario']) ?></p>
+            <p><strong>Área:</strong> <?= htmlspecialchars($nombre_area) ?></p>
+        </div>
+
+        <br>
         <?php if ($area_id > 0): ?>
             <div class="search-container">
                 <i class="fas fa-search search-icon"></i>
@@ -118,12 +116,17 @@ function mostrarEstatus($valor)
                                         </button>
                                     <?php endif; ?>
                                 </td>
-
                             </tr>
+                           
                         <?php endforeach; ?>
                     </tbody>
                 </table>
             </div>
+             <div class="logout-container">
+                                <form action="../actions/cerrarSesionUsuario.php" method="POST">
+                                    <button type="submit" class="btn-cerrar-sesion"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</button>
+                                </form>
+                            </div>
         <?php endif; ?>
     </main>
 

@@ -1,6 +1,5 @@
 <?php
 require_once __DIR__ . '/../../config/conexion.php';
-
 // Obtener proveedores y áreas únicos
 $proveedores = [];
 $areas = [];
@@ -28,6 +27,7 @@ $result = mysqli_query($conectar, $query);
 
 $articulos = [];
 while ($row = mysqli_fetch_assoc($result)) $articulos[] = $row;
+
 ?>
 <!DOCTYPE html>
 <html lang="es">

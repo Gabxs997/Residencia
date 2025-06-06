@@ -1,7 +1,21 @@
 <?php
 require_once __DIR__ . '/../../config/conexion.php';
 
-// Lista blanca de tablas permitidas con sus nombres amigables
+// 🔒 Eliminar usuario de departamento (antes de cualquier otra lógica)
+if (isset($_GET['eliminar_usuario'])) {
+    $id = intval($_GET['eliminar_usuario']);
+
+    $eliminar = mysqli_query($conectar, "DELETE FROM usuarios_departamento WHERE id = $id");
+
+    if ($eliminar) {
+        echo "<script>alert('Usuario eliminado correctamente.'); window.location.href = '../crearUsuario.php';</script>";
+    } else {
+        echo "<script>alert('Error al eliminar el usuario.'); window.location.href = '../crearUsuario.php';</script>";
+    }
+    exit;
+}
+
+// 🔒 Eliminar de otras tablas
 $tablasPermitidas = [
     'articulos' => 'Artículo',
     'proveedores' => 'Proveedor',
@@ -9,24 +23,19 @@ $tablasPermitidas = [
     'ubicaciones' => 'Ubicación'
 ];
 
-// Obtener parámetros
 $tabla = isset($_GET['tabla']) ? $_GET['tabla'] : '';
 $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
-// Validar tabla permitida
 if (!array_key_exists($tabla, $tablasPermitidas)) {
     die('<script>alert("Error: Tabla no permitida"); window.history.back();</script>');
 }
 
-// Validar ID
 if ($id <= 0) {
     die('<script>alert("Error: ID inválido"); window.history.back();</script>');
 }
 
-// Obtener nombre amigable para mensajes
 $nombreRegistro = $tablasPermitidas[$tabla];
 
-// Consulta de eliminación segura
 $query = "DELETE FROM " . mysqli_real_escape_string($conectar, $tabla) . " WHERE id = $id";
 $resultado = mysqli_query($conectar, $query);
 
