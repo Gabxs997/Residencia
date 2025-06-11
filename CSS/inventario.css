@@ -247,3 +247,112 @@ input[type="email"] {
     cursor: pointer;
 }
 
+/*Sección de inventario*/
+.btn-generar {
+    background-color: #5c1434;
+    color: white;
+    padding: 12px 22px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.btn-generar:hover {
+    background-color: #7b1e4d;
+    transform: translateY(-2px);
+}
+
+.btn-generar:active {
+    transform: scale(0.98);
+}
+
+.form-area-select {
+    margin-bottom: 1.5rem;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    width: 500px;
+    align-items: center;
+}
+
+.area-label {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: #5c1434;
+}
+
+.select-area {
+    padding: 6px 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    background-color: #fff;
+    transition: border 0.3s, box-shadow 0.3s;
+    min-width: 250px;
+    width: auto;
+}
+
+.select-area:hover,
+.select-area:focus {
+    border-color: #666;
+    box-shadow: 0 0 5px rgba(100, 100, 100, 0.3);
+    outline: none;
+}
+
+.input-activofijo {
+    width: 100%;
+    max-width: 400px;
+    padding: 10px 14px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.input-activofijo:focus {
+    border-color: #3b82f6; /* azul moderno */
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2); /* halo azul */
+}
+
+.modal-field label {
+    font-weight: bold;
+    margin-bottom: 6px;
+    display: block;
+}
+.btn-cancelar {
+    background-color: #f87171; /* rojo claro */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn-cancelar:hover {
+    background-color: #ef4444; /* rojo más intenso */
+}
+
+.btn-descarga {
+    background-color: #10b981; /* verde esmeralda */
+    color: white;
+    padding: 10px 22px;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn-descarga:hover {
+    background-color: #059669; /* verde más oscuro */
+}
+

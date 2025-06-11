@@ -55,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                     <div class="form-group">
                         <label for="numero_partida">Partida Presupuestal</label>
-                        <input type="text" name="numero_partida" id="numero_partida" value="<?= htmlspecialchars($partida['numero_partida']) ?>" required>
+                        <input type="text" name="numero_partida" id="numero_partida" value="<?= htmlspecialchars($partida['numero_partida']) ?>" readonly>
                     </div>
 
                     <div class="form-group">
@@ -65,7 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                     <div class="form-group">
                         <label for="numero_subpartida">Partida Contable</label>
-                        <input type="text" name="numero_subpartida" id="numero_subpartida" value="<?= htmlspecialchars($partida['numero_subpartida']) ?>" required>
+                        <input type="text" name="numero_subpartida" id="numero_subpartida" value="<?= htmlspecialchars($partida['numero_subpartida']) ?>" readonly>
                     </div>
 
                     <div class="form-group">

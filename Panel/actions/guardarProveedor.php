@@ -32,6 +32,13 @@ $telefonoContacto2 = !empty($_POST['telefonoContacto2']) ? mysqli_real_escape_st
 $emailContacto = !empty($_POST['emailContacto']) ? mysqli_real_escape_string($conectar, $_POST['emailContacto']) : NULL;
 $estadoContacto = !empty($_POST['estadoContacto']) ? mysqli_real_escape_string($conectar, $_POST['estadoContacto']) : NULL;
 
+// Verificar si ya existe proveedor con esa razón social
+$verificar = mysqli_query($conectar, "SELECT id FROM proveedores WHERE razon_social = '$razonSocial'");
+if (mysqli_num_rows($verificar) > 0) {
+    echo '<script>alert("Ya existe un proveedor con esa razón social."); window.history.back();</script>';
+    exit;
+}
+
 mysqli_begin_transaction($conectar);
 
 try {

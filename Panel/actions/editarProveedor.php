@@ -14,7 +14,7 @@ $proveedor = mysqli_fetch_assoc($result);
 
 // Procesar el formulario
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $razon_social = mysqli_real_escape_string($conectar, $_POST['razon_social']);
+    $razon_social = $proveedor['razon_social']; // No permitir edición
     $direccion = mysqli_real_escape_string($conectar, $_POST['direccion']);
     $telefono1 = mysqli_real_escape_string($conectar, $_POST['telefono1']);
     $telefono2 = mysqli_real_escape_string($conectar, $_POST['telefono2']);
@@ -27,7 +27,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Actualizar proveedor
     $sqlProveedor = "UPDATE proveedores SET 
-        razon_social = '$razon_social', 
         direccion = '$direccion', 
         telefono1 = '$telefono1', 
         telefono2 = '$telefono2', 
@@ -83,7 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="form-grid">
                 <div class="form-group">
                     <label for="razon_social">Razón Social</label>
-                    <input type="text" name="razon_social" id="razon_social" value="<?= htmlspecialchars($proveedor['razon_social']) ?>" required>
+                    <input type="text" name="razon_social" id="razon_social" value="<?= htmlspecialchars($proveedor['razon_social']) ?>" readonly>
                 </div>
                 <div class="form-group">
                     <label for="direccion">Dirección</label>

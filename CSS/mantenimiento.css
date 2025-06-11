@@ -230,3 +230,41 @@ td.accion-centrada {
     text-align: center;
     vertical-align: middle;
 }
+
+.search-container {
+    margin-bottom: 15px;
+    text-align: right;
+}
+
+.buscador-mto {
+    width: 100%;
+    padding: 10px 15px 10px 40px;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    font-size: 14px;
+    transition: all 0.3s;
+    background-color: #f9f9f9;
+}
+
+.buscador-mto:focus {
+    outline: none;
+    border-color: #5c1434;
+    box-shadow: 0 0 5px rgba(92, 20, 52, 0.3);
+    background-color: white;
+}
+
+.search-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #777;
+}
+
+.highlight {
+    background-color: #FFEB3B;
+    color: #000;
+    font-weight: bold;
+    padding: 1px 3px;
+    border-radius: 2px;
+}

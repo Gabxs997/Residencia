@@ -26,14 +26,26 @@ $coordinador = mysqli_real_escape_string($conectar, $_POST['coordinador']);
 $rfc = mysqli_real_escape_string($conectar, $_POST['rfc']);
 $telefono = mysqli_real_escape_string($conectar, $_POST['telefono']);
 
-// 5. Preparar la consulta SQL
+// 5. Verificar si el área ya existe (no duplicar)
+$verificar = mysqli_query($conectar, "SELECT id FROM ubicaciones WHERE nombre_area = '$nombreArea'");
+if (mysqli_num_rows($verificar) > 0) {
+    echo '
+    <script>
+    alert("Ya existe una ubicación con ese nombre de área.");
+    window.history.back();
+    </script>
+    ';
+    exit;
+}
+
+// 6. Preparar la consulta SQL
 $sql = "INSERT INTO ubicaciones (
     nombre_area, coordinador, rfc, telefono
 ) VALUES (
     '$nombreArea', '$coordinador', '$rfc', '$telefono'
 )";
 
-// 6. Ejecutar consulta y mostrar resultado
+// 7. Ejecutar consulta y mostrar resultado
 if (mysqli_query($conectar, $sql)) {
     echo '
     <script>
@@ -50,6 +62,6 @@ if (mysqli_query($conectar, $sql)) {
     ';
 }
 
-// 7. Cerrar conexión
+// 8. Cerrar conexión
 mysqli_close($conectar);
 ?>

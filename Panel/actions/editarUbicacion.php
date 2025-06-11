@@ -63,7 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="form-grid">
                 <div class="form-group">
                     <label for="nombre_area">Área</label>
-                    <input type="text" id="nombre_area" name="nombre_area" value="<?= htmlspecialchars($ubicacion['nombre_area']) ?>" required>
+                    <input type="text" id="nombre_area" name="nombre_area" value="<?= htmlspecialchars($ubicacion['nombre_area']) ?>" readonly>
                 </div>
                 <div class="form-group">
                     <label for="coordinador">Coordinador</label>

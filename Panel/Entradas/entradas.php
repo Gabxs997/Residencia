@@ -2,8 +2,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../CSS/admin.css"> 
-    <link rel="stylesheet" href="../CSS/inventario.css">
+    <link rel="stylesheet" href="../../CSS/admin.css"> 
+    <link rel="stylesheet" href="../../CSS/inventario.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <title>Reportes</title>
 </head>
@@ -35,12 +35,18 @@
 
     <!-- Contenido de inventarios -->
     <main class="main-content">
-    <h1>Sección de entradas y salidas</h1><br>
+    <h1>
+            <a href="../inventario.php" class="back-btn">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+            Vales de entrada
+        </h1><br><br>
     
     <div class="sections">
         <ul>
-            <li><a href="Entradas/entradas.php">Entradas</a></li>
-            <li><a href="Salidas/salidas.php">Salidas</a></li>
+            <li><a href="entradaNormal.php">Normal</a></li>
+            <li><a href="comodato.php">Comodato</a></li>
+            <li><a href="articuloPersonal.php">Artículos personales</a></li>
         </ul>
     </div>
 </main>
