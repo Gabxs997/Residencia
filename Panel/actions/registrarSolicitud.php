@@ -15,23 +15,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['articulo_id'])) {
         WHERE articulo_id = $articulo_id AND estatus IN (0, 1)
     ");
 
-    if (mysqli_num_rows($check) === 0) {
-        // Insertar nueva solicitud
+    if (mysqli_num_rows(result: $check) === 0) {
+        // Insertar nueva solicitud con respuesta_id en NULL por defecto
         $insert = mysqli_query($conectar, "
             INSERT INTO solicitudes_mantenimiento (
-                articulo_id, nombre_solicitante, descripcion_problema, fecha_solicitud, estatus
+                articulo_id, nombre_solicitante, descripcion_problema, fecha_solicitud, estatus, respuesta_id
             ) VALUES (
-                $articulo_id, '$nombre', '$problema', CURDATE(), 0
+                $articulo_id, '$nombre', '$problema', NOW(), 0, NULL
             )
         ");
 
         if ($insert) {
-            echo "<script>alert('Solicitud registrada exitosamente.'); window.location.href = '../reportesT/solicitarMantenimiento.php?area_id=$area_id';</script>";
+            echo "<script>alert('Solicitud registrada exitosamente.'); window.location.href = '../departamento/solicitarMantenimiento.php?area_id=$area_id';</script>";
         } else {
-            echo "<script>alert('Error al registrar la solicitud.'); window.location.href = '../reportesT/solicitarMantenimiento.php?area_id=$area_id';</script>";
+            echo "<script>alert('Error al registrar la solicitud.'); window.location.href = '../departamento/solicitarMantenimiento.php?area_id=$area_id';</script>";
         }
     } else {
-        echo "<script>alert('Ya existe una solicitud activa para este artículo.'); window.location.href = '../reportesT/solicitarMantenimiento.php?area_id=$area_id';</script>";
+        echo "<script>alert('Ya existe una solicitud activa para este artículo.'); window.location.href = '../departamento/solicitarMantenimiento.php?area_id=$area_id';</script>";
     }
     exit;
 }

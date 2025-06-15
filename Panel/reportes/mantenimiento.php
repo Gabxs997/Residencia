@@ -8,22 +8,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['fecha_mantenimiento']
     $fecha = $_POST['fecha_mantenimiento'];
     $tipo = $_POST['tipo'];
     $estatus = $_POST['estatus'];
-    $respuesta = ($estatus === 'Terminado') ? $_POST['respuesta'] : '';
+    $respuesta = in_array($estatus, ['En proceso', 'Terminado']) ? $_POST['respuesta'] : '';
+
     $observaciones = $_POST['descripcion_problema'] ?? '';
 
     $prox = new DateTime($fecha);
     $prox->modify('+6 months');
     $siguiente = $prox->format('Y-m-d');
 
+    // Insertar mantenimiento
     mysqli_query($conectar, "
-        INSERT INTO mantenimientos (articulo_id, fecha_mantenimiento, siguiente_mantenimiento, tipo, estatus, respuesta, observaciones)
-        VALUES ('$idArticulo', '$fecha', '$siguiente', '$tipo', '$estatus', '$respuesta', '$observaciones')
-    ");
+    INSERT INTO mantenimientos (articulo_id, fecha_mantenimiento, siguiente_mantenimiento, tipo, estatus, respuesta, observaciones)
+    VALUES ('$idArticulo', '$fecha', '$siguiente', '$tipo', '$estatus', '$respuesta', '$observaciones')
+");
 
+
+    // Obtener ID recién insertado
+    $mantenimiento_id = mysqli_insert_id($conectar);
+
+    // Actualizar siguiente mantenimiento en artículos
     mysqli_query($conectar, "
-        UPDATE articulos SET siguiente_mantenimiento = '$siguiente' WHERE id = $idArticulo
-    ");
+    UPDATE articulos SET siguiente_mantenimiento = '$siguiente' WHERE id = $idArticulo
+");
 
+    // Convertir estatus a número
     $estatus_int = match ($estatus) {
         'Pendiente' => 0,
         'En proceso' => 1,
@@ -31,21 +39,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['fecha_mantenimiento']
         default => 0
     };
 
+    // Obtener la última solicitud del artículo
     $res = mysqli_query($conectar, "
-        SELECT id FROM solicitudes_mantenimiento 
-        WHERE articulo_id = $idArticulo 
-        ORDER BY id DESC LIMIT 1
-    ");
+    SELECT id FROM solicitudes_mantenimiento 
+    WHERE articulo_id = $idArticulo 
+    ORDER BY id DESC LIMIT 1
+");
 
     if ($row = mysqli_fetch_assoc($res)) {
-        $ultima_solicitud_id = $row['id'];
+        $solicitud_id = $row['id'];
 
+        // Vincular solicitud con el mantenimiento (respuesta_id)
         mysqli_query($conectar, "
-            UPDATE solicitudes_mantenimiento 
-            SET estatus = $estatus_int 
-            WHERE id = $ultima_solicitud_id
-        ");
+        UPDATE solicitudes_mantenimiento 
+        SET estatus = $estatus_int, respuesta_id = $mantenimiento_id 
+        WHERE id = $solicitud_id
+    ");
     }
+
 
     header("Location: mantenimiento.php?refreshed=1");
     exit;
@@ -80,10 +91,11 @@ $solicitudes = mysqli_query($conectar, "
     <link rel="stylesheet" href="../../CSS/inventario.css">
     <link rel="stylesheet" href="../../CSS/mantenimiento.css">
     <link rel="stylesheet" href="../../CSS/reportes.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
-    <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+    <link rel="stylesheet" href="../../font/css/all.min.css">
+    <script src="../../lib/jspdf.umd.min.js"></script>
+    <script src="../../lib/jspdf.plugin.autotable.min.js"></script>
+    <script src="../../lib/xlsx.full.min.js"></script>
+
 </head>
 
 <body>
@@ -116,10 +128,8 @@ $solicitudes = mysqli_query($conectar, "
                         <th>ID Artículo</th>
                         <th>Descripción</th>
                         <th>Área</th>
-                        <th>Proveedor</th>
                         <th>Fecha de Solicitud</th>
                         <th>Solicitante</th>
-                        <th>Problema</th>
                         <th>Estatus</th>
                         <th>Acción</th>
                     </tr>
@@ -130,10 +140,8 @@ $solicitudes = mysqli_query($conectar, "
                             <td><?= $sol['articulo_id'] ?></td>
                             <td><?= htmlspecialchars($sol['descripcion']) ?></td>
                             <td><?= htmlspecialchars($sol['nombre_area']) ?></td>
-                            <td><?= htmlspecialchars($sol['razon_social']) ?></td>
-                            <td><?= date("Y-m-d", strtotime($sol['fecha_solicitud'])) ?></td>
+                            <td><?= date("Y-m-d h:i A", strtotime($sol['fecha_solicitud'])) ?></td>
                             <td><?= htmlspecialchars($sol['nombre_solicitante']) ?></td>
-                            <td><?= htmlspecialchars($sol['descripcion_problema']) ?></td>
                             <td>
                                 <?= match ((string)$sol['estatus_mantenimiento']) {
                                     '1' => "<span class='badge-sm badge-proceso'>En proceso</span>",
@@ -141,9 +149,12 @@ $solicitudes = mysqli_query($conectar, "
                                     '3' => "<span class='badge-sm badge-cancelado'>Cancelado</span>",
                                     default => "<span class='badge-sm badge-pendiente'>Pendiente</span>"
                                 } ?>
-
                             </td>
                             <td class="accion-centrada">
+                                <button class="btn-detalles" onclick='mostrarSolicitud(<?= json_encode($sol) ?>)'>
+                                    <i class="fas fa-eye"></i> Ver
+                                </button>
+
                                 <?php if (in_array($sol['estatus_mantenimiento'], [2, 3])): ?>
                                     <form class="form-mto" method="POST" action="../actions/eliminarSolicitud.php" onsubmit="return confirm('¿Eliminar esta solicitud?');">
                                         <input type="hidden" name="solicitud_id" value="<?= $sol['solicitud_id'] ?>">
@@ -155,10 +166,12 @@ $solicitudes = mysqli_query($conectar, "
                                     </button>
                                 <?php endif; ?>
                             </td>
+
                         </tr>
                     <?php endwhile; ?>
                 </tbody>
             </table>
+
         </div>
         <div class="modal-overlay" id="modalMantenimiento">
             <div class="modal-container">
@@ -199,6 +212,31 @@ $solicitudes = mysqli_query($conectar, "
                 </form>
             </div>
         </div>
+        <!-- Modal Detalles de Solicitud -->
+        <div class="modal-overlay" id="modalSolicitud">
+            <div class="modal-container-flat">
+                <span class="modal-close" onclick="cerrarModalSolicitud()"><i class="fas fa-times"></i></span>
+                <h2 class="modal-title"><i class="fas fa-info-circle"></i> Detalles de la Solicitud</h2>
+
+                <div class="modal-field-flat"><strong>ID del Artículo:</strong> <span id="ver_id"></span></div>
+                <div class="modal-field-flat"><strong>Descripción:</strong> <span id="ver_descripcion"></span></div>
+                <div class="modal-field-flat"><strong>Área:</strong> <span id="ver_area"></span></div>
+                <div class="modal-field-flat"><strong>Proveedor:</strong> <span id="ver_proveedor"></span></div>
+                <div class="modal-field-flat"><strong>Fecha de Solicitud:</strong> <span id="ver_fecha"></span></div>
+                <div class="modal-field-flat"><strong>Solicitante:</strong> <span id="ver_solicitante"></span></div>
+                <div class="modal-field-flat"><strong>Descripción del Problema:</strong> <span id="ver_problema" style="white-space: pre-wrap;"></span></div>
+                <div class="modal-field-flat"><strong>Estatus:</strong> <span id="ver_estatus"></span></div>
+
+                <div class="modal-buttons" style="margin-top: 25px; display: flex; justify-content: center; gap: 18px;">
+                    <button class="btn-cancelar" onclick="cerrarModalSolicitud()">
+                        <i class="fas fa-times-circle"></i> Cerrar
+                    </button>
+                </div>
+            </div>
+        </div>
+
+
+                     <!--Sección de historial de mantenimientos-->
 
 
         <?php
@@ -216,20 +254,30 @@ $solicitudes = mysqli_query($conectar, "
 
         $filtro_area = $_GET['filtro_area'] ?? '';
         $filtro_estatus = $_GET['filtro_estatus'] ?? '';
-        $filtro_mes = $_GET['filtro_mes'] ?? '';
+        $filtro_inicio = $_GET['filtro_inicio'] ?? '';
+        $filtro_fin = $_GET['filtro_fin'] ?? '';
 
         $where = ["s.visible = 1"];
         if ($filtro_area !== '') $where[] = "a.ubicacion = " . intval($filtro_area);
         if ($filtro_estatus !== '') $where[] = "s.estatus = " . intval($filtro_estatus);
-        if ($filtro_mes !== '') $where[] = "MONTH(s.fecha_solicitud) = " . intval($filtro_mes);
+        if ($filtro_inicio !== '' && $filtro_fin !== '') {
+            $inicio = mysqli_real_escape_string($conectar, $filtro_inicio);
+            $fin = mysqli_real_escape_string($conectar, $filtro_fin);
+            $where[] = "DATE(s.fecha_solicitud) BETWEEN '$inicio' AND '$fin'";
+        }
 
-        $query_historial = "SELECT s.fecha_solicitud, s.nombre_solicitante, s.descripcion_problema,
-           a.descripcion AS articulo, u.nombre_area, s.estatus
-    FROM solicitudes_mantenimiento s
-    INNER JOIN articulos a ON s.articulo_id = a.id
-    LEFT JOIN ubicaciones u ON a.ubicacion = u.id
-    WHERE " . implode(" AND ", $where) . "
-    ORDER BY u.nombre_area ASC, s.estatus ASC, s.fecha_solicitud DESC";
+
+        $query_historial = "SELECT 
+    s.fecha_solicitud, s.nombre_solicitante, s.descripcion_problema,
+    a.descripcion AS articulo, u.nombre_area, s.estatus,
+    m.tipo
+FROM solicitudes_mantenimiento s
+INNER JOIN articulos a ON s.articulo_id = a.id
+LEFT JOIN ubicaciones u ON a.ubicacion = u.id
+LEFT JOIN mantenimientos m ON m.id = s.respuesta_id
+WHERE " . implode(" AND ", $where) . "
+ORDER BY u.nombre_area ASC, s.estatus ASC, s.fecha_solicitud DESC";
+
 
         $historialSolicitudes = mysqli_query($conectar, $query_historial);
         $totalFiltrados = mysqli_num_rows($historialSolicitudes);
@@ -245,10 +293,12 @@ $solicitudes = mysqli_query($conectar, "
         if ($filtro_estatus !== '') {
             $filtroNombre .= ($filtroNombre ? ' | ' : '') . 'Estatus: ' . $estatus_opciones[$filtro_estatus];
         }
-        if ($filtro_mes !== '') {
-            $mesNombre = date("F", mktime(0, 0, 0, intval($filtro_mes), 10));
-            $filtroNombre .= ($filtroNombre ? ' | ' : '') . 'Mes: ' . $mesNombre;
+        if ($filtro_inicio !== '' && $filtro_fin !== '') {
+            $filtroNombre .= ($filtroNombre ? ' | ' : '') . "Rango: $filtro_inicio a $filtro_fin";
         }
+        // Construir URL para quitar filtros
+$quitarFiltroURL = basename($_SERVER['PHP_SELF']);
+
         ?>
         <br><br>
         <h2 style="margin-top:50px;">Historial de Solicitudes</h2><br><br>
@@ -266,11 +316,12 @@ $solicitudes = mysqli_query($conectar, "
             <button class="btn-descarga" onclick="document.getElementById('modalFiltro').style.display='flex'">
                 <i class="fas fa-filter"></i> Filtro
             </button>
-            <?php if ($filtro_area || $filtro_estatus || $filtro_mes): ?>
-                <a href="mantenimiento.php" class="btn-filtro-reset" style="margin-left:14px">
+            <?php if ($filtro_area || $filtro_estatus || $filtro_inicio || $filtro_fin): ?>
+                <a href="<?= $quitarFiltroURL ?>" class="btn-filtro-reset">
                     <i class="fas fa-times-circle"></i> Quitar Filtro
                 </a>
             <?php endif; ?>
+
         </div>
         <!-- Cantidad de articulos encontrados-->
         <p><strong>Total encontrados:</strong> <?= $totalFiltrados ?> solicitud(es) de mantenimiento</p>
@@ -285,6 +336,7 @@ $solicitudes = mysqli_query($conectar, "
                         <th>Artículo</th>
                         <th>Solicitante</th>
                         <th>Fecha de Solicitud</th>
+                        <th>Tipo</th>
                         <th>Descripción del Problema</th>
                         <th>Estatus</th>
                     </tr>
@@ -293,10 +345,18 @@ $solicitudes = mysqli_query($conectar, "
                     <?php while ($row = mysqli_fetch_assoc($historialSolicitudes)): ?>
                         <tr>
                             <td><?= htmlspecialchars($row['nombre_area']) ?></td>
+
                             <td><?= htmlspecialchars($row['articulo']) ?></td>
+
                             <td><?= htmlspecialchars($row['nombre_solicitante']) ?></td>
-                            <td><?= date("Y-m-d", strtotime($row['fecha_solicitud'])) ?></td>
-                            <td><?= htmlspecialchars($row['descripcion_problema']) ?></td>
+
+                            <td><?= date("Y-m-d h:i A", strtotime($row['fecha_solicitud'])) ?></td>
+
+                            <td><?= htmlspecialchars($row['tipo'] ?? '—') ?></td>
+
+                            <td class="descripcion-wrap"><?= nl2br(htmlspecialchars($row['descripcion_problema'])) ?></td>
+
+
                             <td>
                                 <?= match ((string)$row['estatus']) {
                                     '1' => "<span class='badge-sm badge-proceso'>En proceso</span>",
@@ -311,7 +371,6 @@ $solicitudes = mysqli_query($conectar, "
             </table>
         </div>
         <!-- Modal Filtro -->
-        <!-- Modal Filtro corregido -->
         <div class="modal-overlay" id="modalFiltro" style="display:none; align-items:center;">
             <div class="modal-container" style="width:420px; min-height:170px; padding:32px 24px;">
                 <span class="modal-close" onclick="document.getElementById('modalFiltro').style.display='none'">
@@ -341,17 +400,15 @@ $solicitudes = mysqli_query($conectar, "
                             <?php endforeach; ?>
                         </select>
                     </div>
-                    <div class="modal-field">
-                        <label><i class="fas fa-calendar"></i> Mes:</label>
-                        <select name="filtro_mes" style="width:100%;">
-                            <option value="">Seleccione un mes</option>
-                            <?php for ($m = 1; $m <= 12; $m++): ?>
-                                <option value="<?= $m ?>" <?= ($_GET['filtro_mes'] ?? '') == $m ? 'selected' : '' ?>>
-                                    <?= date("F", mktime(0, 0, 0, $m, 10)) ?>
-                                </option>
-                            <?php endfor; ?>
-                        </select>
+                    <div class="modal-field filtro-modal">
+                        <label><i class="fas fa-calendar-alt"></i> Fecha Inicio:</label>
+                        <input type="date" name="filtro_inicio" value="<?= htmlspecialchars($_GET['filtro_inicio'] ?? '') ?>">
                     </div>
+                    <div class="modal-field filtro-modal">
+                        <label><i class="fas fa-calendar-check"></i> Fecha Fin:</label>
+                        <input type="date" name="filtro_fin" value="<?= htmlspecialchars($_GET['filtro_fin'] ?? '') ?>">
+                    </div>
+
                     <div style="display:flex; justify-content:flex-end; gap:10px;">
                         <button type="submit" class="btn-descarga">
                             <i class="fas fa-search"></i> Aplicar Filtro
@@ -380,7 +437,7 @@ $solicitudes = mysqli_query($conectar, "
 
         function mostrarRespuesta(valor) {
             const campo = document.getElementById('campoRespuesta');
-            campo.style.display = (valor === 'Terminado') ? 'block' : 'none';
+            campo.style.display = (valor === 'En proceso') ? 'block' : 'none';
         }
     </script>
 
@@ -471,24 +528,138 @@ $solicitudes = mysqli_query($conectar, "
             const {
                 jsPDF
             } = window.jspdf;
-            const doc = new jsPDF();
-            const columnas = ["Área", "Artículo", "Solicitante", "Fecha", "Descripción", "Estatus"];
+            const doc = new jsPDF({
+                orientation: "landscape"
+            });
+
+            const columnas = ["Área", "Artículo", "Solicitante", "Fecha y Hora", "Tipo", "Descripción", "Estatus"];
             const filas = Array.from(document.querySelectorAll('#tablaHistorial tbody tr'))
                 .filter(tr => tr.style.display !== 'none')
-                .map(tr => Array.from(tr.children).map(td => td.textContent.trim()));
+                .map(tr => {
+                    const tds = tr.children;
+                    const fechaCompleta = tds[3].textContent.trim();
+                    const [fecha, hora] = fechaCompleta.split(' ');
+                    return [
+                        tds[0].textContent.trim(),
+                        tds[1].textContent.trim(),
+                        tds[2].textContent.trim(),
+                        `${fecha}\n${hora || ''}`,
+                        tds[4].textContent.trim(),
+                        tds[5].textContent.trim(),
+                        tds[6].textContent.trim()
+                    ];
+                });
 
-            doc.setFontSize(14);
-            doc.text("Historial de Solicitudes de Mantenimiento", 14, 20);
-            if ("<?= $filtroNombre ?>") doc.text("<?= $filtroNombre ?>", 14, 28);
-            doc.text("Total: <?= $totalFiltrados ?> solicitud(es)", 14, 36);
+            const colWidths = [25, 35, 35, 30, 20, 70, 25];
+            const totalWidth = colWidths.reduce((sum, w) => sum + w, 0);
+            const pageWidth = doc.internal.pageSize.getWidth();
+            const pageHeight = doc.internal.pageSize.getHeight();
+            const marginLeft = (pageWidth - totalWidth) / 2;
 
-            doc.autoTable({
-                head: [columnas],
-                body: filas,
-                startY: 42
-            });
-            doc.save("historial_solicitudes.pdf");
+            const header = new Image();
+            header.src = '../../Logos/headerVale.png';
+            const footer = new Image();
+            footer.src = '../../Logos/footerVale.png';
+
+            header.onload = () => {
+                footer.onload = () => {
+                    const imgWidth = 180;
+                    const imgX = (pageWidth - imgWidth) / 2;
+                    const headerY = 10;
+                    const footerHeight = 18;
+                    const footerY = pageHeight - footerHeight - 5;
+
+                    doc.setFont('helvetica', 'bold');
+                    doc.setFontSize(14);
+                    doc.text("Historial de Solicitudes de Mantenimiento", pageWidth / 2, 40, {
+                        align: 'center'
+                    });
+
+                    if ("<?= $filtroNombre ?>") {
+                        doc.setFont('helvetica', 'normal');
+                        doc.setFontSize(12);
+                        doc.text("<?= $filtroNombre ?>", pageWidth / 2, 33, {
+                            align: 'center'
+                        });
+                    }
+
+                    doc.setFont('helvetica', 'bold');
+                    doc.setFontSize(12);
+                    doc.text(`Total: <?= $totalFiltrados ?> solicitud(es)`, pageWidth / 2, 46, {
+                        align: 'center'
+                    });
+
+                    doc.autoTable({
+                        head: [columnas],
+                        body: filas,
+                        startY: 52,
+                        margin: {
+                            top: 35,
+                            left: marginLeft,
+                            bottom: footerHeight + 15
+                        },
+                        styles: {
+                            fontSize: 8,
+                            cellPadding: 2,
+                            valign: 'top'
+                        },
+                        columnStyles: {
+                            0: {
+                                cellWidth: colWidths[0]
+                            },
+                            1: {
+                                cellWidth: colWidths[1]
+                            },
+                            2: {
+                                cellWidth: colWidths[2]
+                            },
+                            3: {
+                                cellWidth: colWidths[3]
+                            },
+                            4: {
+                                cellWidth: colWidths[4]
+                            },
+                            5: {
+                                cellWidth: colWidths[5]
+                            },
+                            6: {
+                                cellWidth: colWidths[6]
+                            }
+                        },
+                        headStyles: {
+                            fillColor: [41, 128, 185],
+                            textColor: [255, 255, 255],
+                            halign: 'center'
+                        },
+                        bodyStyles: {
+                            halign: 'left'
+                        },
+                        theme: 'striped',
+                        didDrawPage: function(data) {
+                            doc.addImage(header, 'PNG', imgX, headerY, imgWidth, 15);
+                            doc.addImage(footer, 'PNG', imgX, footerY, imgWidth, footerHeight);
+
+                            const pageSize = doc.internal.pageSize;
+                            const pageWidth = pageSize.width;
+                            const pageHeight = pageSize.height;
+
+                            const str = "Página " + doc.internal.getCurrentPageInfo().pageNumber + " de {totalPages}";
+                            doc.setFontSize(8);
+                            doc.setTextColor(100);
+                            doc.text(str, pageWidth - 50, pageHeight - 5);
+                        }
+                    });
+                    doc.putTotalPages("{totalPages}");
+
+
+                    doc.save("historial_solicitudes.pdf");
+                };
+            };
         }
+
+
+
+
 
         function descargarExcelHistorial() {
             const columnas = ["Área", "Artículo", "Solicitante", "Fecha", "Descripción", "Estatus"];
@@ -522,6 +693,29 @@ $solicitudes = mysqli_query($conectar, "
             });
         });
     </script>
+    <script>
+        function mostrarSolicitud(data) {
+            document.getElementById('ver_id').textContent = data.articulo_id;
+            document.getElementById('ver_descripcion').textContent = data.descripcion || '';
+            document.getElementById('ver_area').textContent = data.nombre_area || '';
+            document.getElementById('ver_proveedor').textContent = data.razon_social || '';
+            document.getElementById('ver_fecha').textContent = data.fecha_solicitud || '';
+            document.getElementById('ver_solicitante').textContent = data.nombre_solicitante || '';
+            document.getElementById('ver_problema').textContent = data.descripcion_problema || '';
+            document.getElementById('ver_estatus').innerHTML = {
+                '1': "<span class='badge-sm badge-proceso'>En proceso</span>",
+                '2': "<span class='badge-sm badge-terminado'>Terminado</span>",
+                '3': "<span class='badge-sm badge-cancelado'>Cancelado</span>"
+            } [data.estatus_mantenimiento] || "<span class='badge-sm badge-pendiente'>Pendiente</span>";
+
+            document.getElementById('modalSolicitud').style.display = 'flex';
+        }
+
+        function cerrarModalSolicitud() {
+            document.getElementById('modalSolicitud').style.display = 'none';
+        }
+    </script>
+
 
 </body>
 

@@ -2,8 +2,9 @@
 session_start();
 require_once __DIR__ . '/../../config/conexion.php';
 
-if (!isset($_SESSION['area_id']) || !isset($_SESSION['usuario'])) {
-    header('Location: ../../Login/loginUsuario.php');
+// Validar que el usuario haya iniciado sesión correctamente como usuario de área
+if (!isset($_SESSION['rol']) || $_SESSION['rol'] !== 'usuario' || !isset($_SESSION['area_id'])) {
+    header('Location: ../../login.php'); // Redirige al login unificado
     exit;
 }
 
@@ -19,11 +20,25 @@ $nombre_area = $area ? $area['nombre_area'] : 'Área desconocida';
 $articulos = [];
 $resArt = mysqli_query($conectar, "
     SELECT a.id, a.descripcion, u.nombre_area,
-        (SELECT estatus FROM solicitudes_mantenimiento sm WHERE sm.articulo_id = a.id ORDER BY sm.id DESC LIMIT 1) AS estatus
+        (
+            SELECT sm.estatus FROM solicitudes_mantenimiento sm 
+            WHERE sm.articulo_id = a.id ORDER BY sm.id DESC LIMIT 1
+        ) AS estatus,
+        (
+            SELECT m.respuesta FROM mantenimientos m 
+            WHERE m.id = (
+                SELECT sm.respuesta_id FROM solicitudes_mantenimiento sm 
+                WHERE sm.articulo_id = a.id 
+                ORDER BY sm.id DESC LIMIT 1
+            )
+        ) AS respuesta
     FROM articulos a
     INNER JOIN ubicaciones u ON a.ubicacion = u.id
     WHERE a.ubicacion = $area_id
 ");
+
+
+
 while ($row = mysqli_fetch_assoc($resArt)) $articulos[] = $row;
 
 function mostrarEstatus($valor)
@@ -34,6 +49,7 @@ function mostrarEstatus($valor)
         default => "<span class='badge-sm badge-pendiente'>Pendiente</span>",
     };
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -45,32 +61,41 @@ function mostrarEstatus($valor)
     <link rel="stylesheet" href="../../CSS/tablas.css">
     <link rel="stylesheet" href="../../CSS/admin.css">
     <link rel="stylesheet" href="../../CSS/solicitarMantenimiento.css">
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" href="../../font/css/all.min.css">
+    <link rel="stylesheet" href="../../CSS/modal.css">
 </head>
 
 <body>
     <header class="headerPanel">
         <div class="menu-icon" onclick="toggleMenu()"><i class="fas fa-bars"></i></div>
-        <div class="user-info"><i class="fas fa-user"></i><span>Técnico</span></div>
+        <div class="user-info">
+            <i class="fas fa-user"></i>
+            <span><?= htmlspecialchars($usuario) ?> | <?= htmlspecialchars($nombre_area) ?></span>
+        </div>
     </header>
     <aside class="sidebar" id="sidebar">
         <div class="menu-icon-close" onclick="toggleMenu()"><i class="fas fa-bars"></i></div>
         <ul class="sidebar-menu">
-            <li><a href="../tecnico.php"><i class="fas fa-home"></i> Inicio</a></li>
-            <li><a href="../catalogoT.php"><i class="fas fa-book"></i> Catálogo</a></li>
-            <li><a href="../reportesT.php"><i class="fas fa-file-alt"></i> Reportes</a></li>
-            <li><a href="../Panel/cerrarSesion.php"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</a></li>
+            <li><a href="../departamentos.php"><i class="fas fa-home"></i>Inicio</a></li>
+            <li><a href="articulosDepartamento.php"><i class="fas fa-book"></i>Artículos</a></li>
+            <li><a href="solicitarMantenimiento.php"><i class="fas fa-book"></i> Solicitar Mantenimiento</a></li>
+            <li><a href="../cerrarSesion.php"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</a></li>
         </ul>
     </aside>
 
     <main class="main-content">
-        <h1><a href="../reportesT.php" class="back-btn"><i class="fas fa-arrow-left"></i></a> Solicitar mantenimiento</h1> <br><br><br><br>
-
-        <div class="usuario-area-info">
-            <p><strong>Usuario:</strong> <?= htmlspecialchars($_SESSION['usuario']) ?></p>
-            <p><strong>Área:</strong> <?= htmlspecialchars($nombre_area) ?></p>
-        </div>
+        <h1><a href="../departamentos.php" style="text-decoration: none;"></i></a> Solicitar mantenimiento</h1> <br><br><br><br>
+        <?php if (isset($_GET['msg'])): ?>
+            <?php if ($_GET['msg'] === 'cancelado'): ?>
+                <div class="alert-success" style="background:#e6ffed; color:#228B22; padding:12px; border-radius:8px; margin-bottom:20px;">
+                    <i class="fas fa-check-circle"></i> Solicitud cancelada correctamente.
+                </div>
+            <?php elseif ($_GET['msg'] === 'error'): ?>
+                <div class="alert-error" style="background:#fdecea; color:#b22222; padding:12px; border-radius:8px; margin-bottom:20px;">
+                    <i class="fas fa-exclamation-triangle"></i> Ocurrió un error al cancelar la solicitud.
+                </div>
+            <?php endif; ?>
+        <?php endif; ?>
 
         <br>
         <?php if ($area_id > 0): ?>
@@ -97,9 +122,10 @@ function mostrarEstatus($valor)
                                 <td><?= htmlspecialchars($art['descripcion']) ?></td>
                                 <td><?= htmlspecialchars($art['nombre_area']) ?></td>
                                 <td><?= mostrarEstatus($art['estatus']) ?></td>
-                                <td>
+
+                                <!--Verificar si hay solicitud activa para este artículo-->
+                                <td class="acciones">
                                     <?php
-                                    // Verificar si hay solicitud activa para este artículo
                                     $articulo_id = $art['id'];
                                     $solicitud = mysqli_query($conectar, "SELECT id FROM solicitudes_mantenimiento WHERE articulo_id = $articulo_id AND estatus IN (0,1) LIMIT 1");
                                     if ($row = mysqli_fetch_assoc($solicitud)):
@@ -110,28 +136,48 @@ function mostrarEstatus($valor)
                                                 <i class="fas fa-times-circle"></i> Cancelar
                                             </button>
                                         </form>
+                                        <?php if ($art['estatus'] == 1 && !empty($art['respuesta'])): ?>
+                                            <button class="btn-ver-respuesta" onclick='mostrarRespuesta("<?= htmlspecialchars($art['respuesta']) ?>")'>
+                                                <i class="fas fa-comment"></i> Ver respuesta
+                                            </button>
+                                        <?php else: ?>
+                                            <span style="color: #999;">—</span>
+                                        <?php endif; ?>
+
+
                                     <?php else: ?>
                                         <button type="button" class="btn-solicitar" onclick="abrirModal(<?= $art['id'] ?>)">
                                             <i class="fas fa-wrench"></i> Solicitar mantenimiento
                                         </button>
                                     <?php endif; ?>
                                 </td>
+
                             </tr>
-                           
+
                         <?php endforeach; ?>
                     </tbody>
                 </table>
             </div>
-             <div class="logout-container">
-                                <form action="../actions/cerrarSesionUsuario.php" method="POST">
-                                    <button type="submit" class="btn-cerrar-sesion"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</button>
-                                </form>
-                            </div>
         <?php endif; ?>
     </main>
+    <!--Modal de ver respuesta-->
+
+    <div class="modal-overlay" id="modalRespuesta" style="display:none;">
+        <div class="modal-container" style="max-width: 500px;">
+            <span class="modal-close" onclick="cerrarModalRespuesta()"><i class="fas fa-times"></i></span>
+            <h2 class="modal-title"><i class="fas fa-comment-dots"></i> Respuesta del Técnico</h2>
+            <p id="contenidoRespuesta" style="white-space: pre-wrap; font-size: 1rem; margin-top: 20px;"></p>
+            <div class="modal-buttons" style="margin-top: 20px;">
+                <button class="btn-cancelar" onclick="cerrarModalRespuesta()">
+                    <i class="fas fa-times-circle"></i> Cerrar
+                </button>
+            </div>
+        </div>
+    </div>
+
 
     <!-- Modal para registrar solicitud -->
-    <!-- Modal de Solicitud -->
+
     <div class="modal-solicitud-overlay" id="modalSolicitud">
         <div class="modal-solicitud-container">
             <span class="modal-solicitud-close" onclick="cerrarModalSolicitud()"><i class="fas fa-times"></i></span>
@@ -155,29 +201,44 @@ function mostrarEstatus($valor)
             </form>
         </div>
     </div>
-
+    <!--Script para cancelar solicitud-->
     <script>
-        //Script para cancelar solicitud
-        function cancelarSolicitud(solicitudId, fila) {
+        function cancelarSolicitud(solicitudId, articuloId) {
             if (!confirm('¿Estás seguro de cancelar esta solicitud?')) return;
 
             fetch('../actions/cancelarSolicitud.php', {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded'
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'X-Requested-With': 'XMLHttpRequest'
                     },
                     body: 'solicitud_id=' + solicitudId
                 })
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        // Eliminar la fila o actualizar columna con botón de solicitud
-                        const filaElemento = document.getElementById('fila-' + fila);
-                        if (filaElemento) {
-                            filaElemento.querySelector('.acciones').innerHTML = `
-                    <button class="btn-solicitar" onclick="abrirModal(${fila})">
-                        <i class="fas fa-plus-circle"></i> Solicitar Mantenimiento
-                    </button>`;
+                        const fila = document.getElementById('fila-' + articuloId);
+                        if (fila) {
+                            // Reemplazar estatus por "Cancelado"
+                            const estatusCelda = fila.querySelector('td:nth-child(4)');
+                            if (estatusCelda) {
+                                estatusCelda.innerHTML = `<span class='badge-sm badge-cancelado'>Cancelado</span>`;
+                            }
+
+                            // Reemplazar respuesta con guion
+                            const respuestaCelda = fila.querySelector('td:nth-child(5)');
+                            if (respuestaCelda) {
+                                respuestaCelda.innerHTML = '<span style="color: #999;">—</span>';
+                            }
+
+                            // Reemplazar acciones con botón de nueva solicitud
+                            const accionesCelda = fila.querySelector('td.acciones');
+                            if (accionesCelda) {
+                                accionesCelda.innerHTML = `
+                        <button type="button" class="btn-solicitar" onclick="abrirModal(${articuloId})">
+                            <i class="fas fa-wrench"></i> Solicitar mantenimiento
+                        </button>`;
+                            }
                         }
                     } else {
                         alert('Error al cancelar la solicitud.');
@@ -185,7 +246,7 @@ function mostrarEstatus($valor)
                 });
         }
     </script>
-    
+
     <script>
         function toggleMenu() {
             const sidebar = document.getElementById('sidebar');
@@ -243,6 +304,22 @@ function mostrarEstatus($valor)
             });
         }
     </script>
+    <script>
+        function mostrarRespuesta(texto) {
+            document.getElementById('contenidoRespuesta').textContent = texto;
+            document.getElementById('modalRespuesta').style.display = 'flex';
+        }
+
+        function cerrarModalRespuesta() {
+            document.getElementById('modalRespuesta').style.display = 'none';
+        }
+    </script>
+    <script>
+    setTimeout(() => {
+        const msg = document.querySelector('.alert-success, .alert-error');
+        if (msg) msg.style.display = 'none';
+    }, 5000);
+</script>
 </body>
 
 </html>

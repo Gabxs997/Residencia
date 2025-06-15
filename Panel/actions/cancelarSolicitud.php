@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['solicitud_id'])) {
         echo json_encode(['success' => $resultado]);
     } else {
         // Redirige de forma clásica si no es AJAX
-        header("Location: ../reportesT/solicitarMantenimiento.php");
+        header("Location: ../departamento/solicitarMantenimiento.php?msg=$msg");
         exit;
     }
 }

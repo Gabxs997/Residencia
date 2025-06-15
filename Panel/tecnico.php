@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>Panel Técnico</title>
     <link rel="stylesheet" href="../CSS/tecnico.css"> 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" href="../font/css/all.min.css">
 </head>
 <body>
     <header class="headerPanel">

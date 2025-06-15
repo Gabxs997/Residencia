@@ -352,5 +352,21 @@ thead {
     background-color: #7c1a4a;
 }
 
+.btn-ver-respuesta {
+    background-color: #5c1434;
+    color: white;
+    border: none;
+    padding: 7px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    margin-left: 6px;
+    transition: all 0.25s ease;
+}
+
+.btn-ver-respuesta:hover {
+    background-color: #c5b895;
+    color: #111;
+}
 
 

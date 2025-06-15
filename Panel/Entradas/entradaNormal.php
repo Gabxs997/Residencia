@@ -20,7 +20,7 @@ $areaSeleccionada = isset($_GET['area']) && is_numeric($_GET['area']) ? intval($
     <link rel="stylesheet" href="../../CSS/admin.css">
     <link rel="stylesheet" href="../../CSS/inventario.css">
     <link rel="stylesheet" href="../../CSS/modal.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" href="../../font/css/all.min.css">
 </head>
 
 <body>
@@ -150,19 +150,49 @@ $areaSeleccionada = isset($_GET['area']) && is_numeric($_GET['area']) ? intval($
                     </span>
                     <h2 class="modal-title">Generar Vale de Entrada</h2>
 
-                    <form id="formVale" method="POST" action="generarVale.php">
+                    <form id="formVale" method="POST" action="generarValeNormal.php">
                         <input type="hidden" name="area_id" value="<?= htmlspecialchars($_GET['area'] ?? '') ?>">
                         <input type="hidden" name="articulos_ids" id="articulos_ids">
                         <input type="hidden" id="tieneContacto" value="<?= $tieneContacto ?>">
 
+                        <?php
+                        // Obtener listado de jefes registrados
+                        $jefes = [];
+                        $resJefes = mysqli_query($conectar, "SELECT id, nombre FROM jefe_activo_fijo ORDER BY nombre");
+                        while ($row = mysqli_fetch_assoc($resJefes)) {
+                            $jefes[] = $row;
+                        }
+                        ?>
+
+                        <?php
+                        // Obtener listado de jefes registrados
+                        $jefes = [];
+                        $resJefes = mysqli_query($conectar, "SELECT id, nombre FROM jefe_activo_fijo ORDER BY nombre");
+                        while ($row = mysqli_fetch_assoc($resJefes)) {
+                            $jefes[] = $row;
+                        }
+                        ?>
+
                         <div class="modal-field">
-                            <label for="jefe_nombre">Nombre del Jefe de Activo Fijo:</label>
-                            <input class="input-activofijo" type="text" name="jefe_nombre" id="jefe_nombre" required>
+                            <label for="jefe_manual">Nuevo Jefe de Activo Fijo:</label>
+                            <input class="input-activofijo" type="text" name="jefe_manual" id="jefe_manual" placeholder="Escribe un nombre nuevo...">
                         </div>
 
                         <div class="modal-field">
+                            <label for="jefe_existente">O selecciona uno existente:</label>
+                            <select id="jefe_existente" name="jefe_existente" class="select-jefe">
+                                <option value="">-- Seleccionar jefe registrado --</option>
+                                <?php foreach ($jefes as $j): ?>
+                                    <option value="<?= htmlspecialchars($j['nombre']) ?>"><?= htmlspecialchars($j['nombre']) ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+
+
+
+                        <div class="modal-field">
                             <label>Coordinador del Área:</label>
-                            <p class="modal-static"><?= htmlspecialchars($infoCoordinador['coordinador']) ?></p>
+                            <p class="modal-static"><?= htmlspecialchars(string: $infoCoordinador['coordinador']) ?></p>
                         </div>
 
                         <div class="modal-field">

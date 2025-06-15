@@ -268,3 +268,119 @@ td.accion-centrada {
     padding: 1px 3px;
     border-radius: 2px;
 }
+
+.modal-container-flat {
+    background: #fff;
+    padding: 35px 32px;
+    border-radius: 14px;
+    width: 100%;
+    max-width: 620px;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.modal-field-flat {
+    margin-bottom: 12px;
+    font-size: 0.95rem;
+    color: #333;
+}
+
+.modal-field-flat strong {
+    color: #5c1434;
+    font-weight: 600;
+}
+
+td.accion-centrada {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 0;
+}
+
+
+/*Descripcion del problema, columna de hsitorial*/
+.table-container td.descripcion-wrap {
+    max-width: 300px;
+    white-space: pre-wrap; /* Mantiene saltos y permite que el texto envuelva */
+    word-wrap: break-word;  /* Rompe palabras largas si es necesario */
+    line-height: 1.4;
+    padding: 8px;
+}
+
+
+
+/* Botón Ver */
+.btn-detalles {
+    background-color: rgb(0, 162, 255);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    height: 42px; /* igual altura */
+    transition: background-color 0.2s ease;
+}
+
+.btn-detalles:hover {
+    background-color: rgb(0, 106, 255);
+    color: white;
+}
+
+/* Botón Registrar */
+.btn-registrar {
+    background-color: #5c1434;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-size: 0.95rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    height: 42px; /* igual altura */
+    transition: background 0.2s ease;
+}
+
+.btn-registrar:hover {
+    background-color: #c5b895;
+    color: #111;
+}
+
+/* Botón Eliminar */
+.btn-eliminar-mto {
+    background-color: #d9534f;
+    color: #fff;
+    padding: 10px 20px;
+    font-size: 0.95rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    height: 42px; /* igual altura */
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+    margin-top: 10px;
+}
+
+.btn-eliminar-mto:hover {
+    background-color: #c9302c;
+}
+
+
+
+.modal-field input,
+.modal-field select,
+.modal-field textarea {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+}

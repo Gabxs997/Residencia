@@ -38,11 +38,11 @@ while ($row = mysqli_fetch_assoc($result)) $articulos[] = $row;
     <link rel="stylesheet" href="../../CSS/admin.css">
     <link rel="stylesheet" href="../../CSS/inventario.css">
     <link rel="stylesheet" href="../../CSS/reportes.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" href="../../font/css/all.min.css">
     <!-- jsPDF, jsPDF-AutoTable, SheetJS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
-    <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+    <script src="../../lib/jspdf.umd.min.js"></script>
+    <script src="../../lib/jspdf.plugin.autotable.min.js"></script>
+    <script src="../../lib/xlsx.full.min.js"></script>
 </head>
 <body>
     <header class="headerPanel">

@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="../../CSS/tablas.css">
     <link rel="stylesheet" href="../../CSS/admin.css">
     <link rel="stylesheet" href="../../CSS/inventario.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" href="../../font/css/all.min.css">
 </head>
 <body>
     <header class="headerPanel">

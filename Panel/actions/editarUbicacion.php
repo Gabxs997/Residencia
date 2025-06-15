@@ -71,11 +71,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
                 <div class="form-group">
                     <label for="rfc">RFC</label>
-                    <input type="text" id="rfc" name="rfc" value="<?= htmlspecialchars($ubicacion['rfc']) ?>" required>
+                    <input type="text" id="rfc" name="rfc" value="<?= htmlspecialchars($ubicacion['rfc']) ?>">
                 </div>
                 <div class="form-group">
                     <label for="telefono">Teléfono</label>
-                    <input type="text" id="telefono" name="telefono" value="<?= htmlspecialchars($ubicacion['telefono']) ?>" required>
+                    <input type="text" id="telefono" name="telefono" value="<?= htmlspecialchars($ubicacion['telefono']) ?>">
                 </div>
             </div>
 

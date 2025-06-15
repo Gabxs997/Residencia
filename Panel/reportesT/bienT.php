@@ -17,6 +17,7 @@ while ($row = mysqli_fetch_assoc($result)) {
 ?>
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <title>Reporte Tipo Bien</title>
@@ -24,11 +25,13 @@ while ($row = mysqli_fetch_assoc($result)) {
     <link rel="stylesheet" href="../../CSS/admin.css">
     <link rel="stylesheet" href="../../CSS/inventario.css">
     <link rel="stylesheet" href="../../CSS/reportes.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" href="../../font/css/all.min.css">
     <!-- jsPDF y SheetJS para generación de PDF/Excel -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+    <script src="../../lib/jspdf.umd.min.js"></script>
+    <script src="../../lib/jspdf.plugin.autotable.min.js"></script>
+    <script src="../../lib/xlsx.full.min.js"></script>
 </head>
+
 <body>
     <header class="headerPanel">
         <div class="menu-icon" onclick="toggleMenu()"><i class="fas fa-bars"></i></div>
@@ -63,22 +66,22 @@ while ($row = mysqli_fetch_assoc($result)) {
                     </tr>
                 </thead>
                 <tbody>
-                <?php foreach ($articulos as $art): ?>
-                    <tr>
-                        <td><?= $art['id'] ?></td>
-                        <td><?= htmlspecialchars($art['descripcion']) ?></td>
-                        <td><?= htmlspecialchars($art['tipo_bien']) ?></td>
-                        <td><?= htmlspecialchars($art['area']) ?></td>
-                        <td><?= htmlspecialchars($art['proveedor']) ?></td>
-                        <td><?= htmlspecialchars($art['partida_presupuestal']) ?></td>
-                        <td><?= htmlspecialchars($art['partida_contable']) ?></td>
-                        <td>
-                            <button class="btn-reporte" onclick='mostrarModal(<?= json_encode($art, JSON_HEX_APOS|JSON_HEX_QUOT) ?>)'>
-                                <i class="fas fa-file-alt"></i> Generar reporte
-                            </button>
-                        </td>
-                    </tr>
-                <?php endforeach; ?>
+                    <?php foreach ($articulos as $art): ?>
+                        <tr>
+                            <td><?= $art['id'] ?></td>
+                            <td><?= htmlspecialchars($art['descripcion']) ?></td>
+                            <td><?= htmlspecialchars($art['tipo_bien']) ?></td>
+                            <td><?= htmlspecialchars($art['area']) ?></td>
+                            <td><?= htmlspecialchars($art['proveedor']) ?></td>
+                            <td><?= htmlspecialchars($art['partida_presupuestal']) ?></td>
+                            <td><?= htmlspecialchars($art['partida_contable']) ?></td>
+                            <td>
+                                <button class="btn-reporte" onclick='mostrarModal(<?= json_encode($art, JSON_HEX_APOS | JSON_HEX_QUOT) ?>)'>
+                                    <i class="fas fa-file-alt"></i> Generar reporte
+                                </button>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
                 </tbody>
             </table>
         </div>
@@ -101,6 +104,7 @@ while ($row = mysqli_fetch_assoc($result)) {
     </main>
     <script>
         let datosArticulo = {};
+
         function mostrarModal(articulo) {
             datosArticulo = articulo;
             const detalles = document.getElementById('modalDetails');
@@ -143,13 +147,16 @@ while ($row = mysqli_fetch_assoc($result)) {
             detalles.innerHTML = html;
             document.getElementById('modalOverlay').style.display = 'flex';
         }
+
         function cerrarModal() {
             document.getElementById('modalOverlay').style.display = 'none';
         }
 
         // PDF bonito con columnas y recuadros + LOGO ISSSTE
         function descargarPDF() {
-            const { jsPDF } = window.jspdf;
+            const {
+                jsPDF
+            } = window.jspdf;
             const doc = new jsPDF({
                 orientation: "landscape",
                 unit: "pt",
@@ -161,7 +168,7 @@ while ($row = mysqli_fetch_assoc($result)) {
             const img = new window.Image();
             img.crossOrigin = '';
             img.src = logoUrl;
-            img.onload = function () {
+            img.onload = function() {
                 // Título
                 doc.setFontSize(23);
                 doc.setTextColor('#5c1434');
@@ -201,7 +208,12 @@ while ($row = mysqli_fetch_assoc($result)) {
                     ["Fecha Registro", datosArticulo.fecha_registro]
                 ];
 
-                let startX = 55, startY = 90, colW = 240, rowH = 44, colCount = 0, maxCols = 3;
+                let startX = 55,
+                    startY = 90,
+                    colW = 240,
+                    rowH = 44,
+                    colCount = 0,
+                    maxCols = 3;
                 doc.setFontSize(12);
 
                 for (let i = 0; i < labels.length; i++) {
@@ -221,7 +233,9 @@ while ($row = mysqli_fetch_assoc($result)) {
                     // Valor
                     doc.setFont(undefined, 'normal');
                     doc.setTextColor('#222');
-                    doc.text((labels[i][1] ? String(labels[i][1]) : ''), x + 12, y + 34, { maxWidth: colW - 40 });
+                    doc.text((labels[i][1] ? String(labels[i][1]) : ''), x + 12, y + 34, {
+                        maxWidth: colW - 40
+                    });
 
                     colCount++;
                     if (colCount >= maxCols) colCount = 0;
@@ -230,7 +244,7 @@ while ($row = mysqli_fetch_assoc($result)) {
                 doc.save(`articulo_${datosArticulo.id}.pdf`);
             };
 
-            img.onerror = function () {
+            img.onerror = function() {
                 alert('No se pudo cargar el logo del ISSSTE, se generará el PDF sin logo.');
                 // Generar sin logo
                 generarPDFSinLogo(doc);
@@ -273,7 +287,12 @@ while ($row = mysqli_fetch_assoc($result)) {
                 ["Fecha Registro", datosArticulo.fecha_registro]
             ];
 
-            let startX = 55, startY = 90, colW = 240, rowH = 44, colCount = 0, maxCols = 3;
+            let startX = 55,
+                startY = 90,
+                colW = 240,
+                rowH = 44,
+                colCount = 0,
+                maxCols = 3;
             doc.setFontSize(12);
 
             for (let i = 0; i < labels.length; i++) {
@@ -289,7 +308,9 @@ while ($row = mysqli_fetch_assoc($result)) {
                 doc.text(labels[i][0] + ":", x + 12, y + 18);
                 doc.setFont(undefined, 'normal');
                 doc.setTextColor('#222');
-                doc.text((labels[i][1] ? String(labels[i][1]) : ''), x + 12, y + 34, { maxWidth: colW - 40 });
+                doc.text((labels[i][1] ? String(labels[i][1]) : ''), x + 12, y + 34, {
+                    maxWidth: colW - 40
+                });
 
                 colCount++;
                 if (colCount >= maxCols) colCount = 0;
@@ -342,10 +363,10 @@ while ($row = mysqli_fetch_assoc($result)) {
 
         // Transición para el botón reporte
         document.querySelectorAll('.btn-reporte').forEach(btn => {
-            btn.addEventListener('mouseenter', function () {
+            btn.addEventListener('mouseenter', function() {
                 this.classList.add('hover');
             });
-            btn.addEventListener('mouseleave', function () {
+            btn.addEventListener('mouseleave', function() {
                 this.classList.remove('hover');
             });
         });
@@ -358,5 +379,5 @@ while ($row = mysqli_fetch_assoc($result)) {
         }
     </script>
 </body>
-</html>
 
+</html>

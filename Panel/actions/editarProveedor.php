@@ -86,7 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
                 <div class="form-group">
                     <label for="direccion">Dirección</label>
-                    <input type="text" name="direccion" id="direccion" value="<?= htmlspecialchars($proveedor['direccion']) ?>" required>
+                    <input type="text" name="direccion" id="direccion" value="<?= htmlspecialchars($proveedor['direccion']) ?>">
                 </div>
                 <div class="form-group">
                     <label for="telefono1">Teléfono 1</label>
@@ -98,7 +98,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
                 <div class="form-group">
                     <label for="email">Correo Electrónico</label>
-                    <input type="email" name="email" id="email" value="<?= htmlspecialchars($proveedor['email']) ?>" required>
+                    <input type="email" name="email" id="email" value="<?= htmlspecialchars($proveedor['email']) ?>">
                 </div>
                 <div class="form-group">
                     <label for="estado">Estado</label>
