@@ -40,10 +40,10 @@ $nombre_area = $area ? $area['nombre_area'] : 'Área desconocida';
             <i class="fas fa-bars"></i> <!-- Icono de menú para cerrar -->
         </div>
         <ul class="sidebar-menu">
-            <li><a href="departamentos.php"><i class="fas fa-home"></i> Inicio</a></li>
-            <li><a href="departamento/articulosDepartamento.php"><i class="fas fa-boxes"></i> Artículos</a></li>
-              <li><a href="departamento/solicitarMantenimiento.php"><i class="fas fa-book"></i> Solicitar Mantenimiento</a></li>
-            <li><a href="cerrarSesion.php"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</a></li>
+            <li><a href="departamentos.php"><i class="fas fa-home"></i>Inicio</a></li>
+            <li><a href="departamento/articulosDepartamento.php"><i class="fas fa-boxes"></i>Catálogo</a></li>
+              <li><a href="departamento/solicitarMantenimiento.php"><i class="fas fa-book"></i>Solicitar Mantenimiento</a></li>
+            <li><a href="cerrarSesion.php"><i class="fas fa-sign-out-alt"></i>Cerrar sesión</a></li>
         </ul>
     </aside>
 

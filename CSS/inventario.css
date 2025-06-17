@@ -261,6 +261,7 @@ input[type="email"] {
     transition: background-color 0.3s, transform 0.2s;
 }
 
+/*Boton de la seccion de vales*/
 .btn-generar:hover {
     background-color: #7b1e4d;
     transform: translateY(-2px);
@@ -269,6 +270,55 @@ input[type="email"] {
 .btn-generar:active {
     transform: scale(0.98);
 }
+
+.btn-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.btn-historial {
+    text-decoration: none;
+    margin-top: 10px;
+    background-color: #5c1434;
+    color: white;
+    padding: 12px 22px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.btn-historial:hover {
+    background-color: #5a6268;
+    transform: translateY(-2px);
+}
+.btn-historial:active {
+    transform: scale(0.98);
+}
+
+.btn-ver {
+    background-color: #17a2b8;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 13px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: background-color 0.2s ease-in-out;
+}
+.btn-ver:hover {
+    background-color: #138496;
+}
+
+
+
+/*separador*/
 
 .form-area-select {
     margin-bottom: 1.5rem;

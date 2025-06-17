@@ -15,7 +15,9 @@ $filtro_valor = isset($_GET['filtro_valor']) ? $_GET['filtro_valor'] : '';
 
 $query = "SELECT a.*, 
                  p.razon_social AS proveedor, 
-                 u.nombre_area AS area
+                 u.nombre_area AS area,
+                 u.rfc AS rfc,
+                 u.coordinador AS responsable
           FROM articulos a
           LEFT JOIN proveedores p ON a.proveedor_id = p.id
           LEFT JOIN ubicaciones u ON a.ubicacion = u.id";
@@ -31,6 +33,7 @@ while ($row = mysqli_fetch_assoc($result)) $articulos[] = $row;
 ?>
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <title>Reporte Tipo Listado</title>
@@ -43,8 +46,9 @@ while ($row = mysqli_fetch_assoc($result)) $articulos[] = $row;
     <script src="../../lib/jspdf.umd.min.js"></script>
     <script src="../../lib/jspdf.plugin.autotable.min.js"></script>
     <script src="../../lib/xlsx.full.min.js"></script>
-    
+
 </head>
+
 <body>
     <header class="headerPanel">
         <div class="menu-icon" onclick="toggleMenu()"><i class="fas fa-bars"></i></div>
@@ -77,21 +81,21 @@ while ($row = mysqli_fetch_assoc($result)) $articulos[] = $row;
             <button class="btn-filtro" onclick="document.getElementById('modalFiltro').style.display='flex'">
                 <i class="fas fa-filter"></i> Filtro
             </button>
-            <?php if($filtro_tipo && $filtro_valor): ?>
+            <?php if ($filtro_tipo && $filtro_valor): ?>
                 <a href="listado.php" class="btn-filtro-reset" style="margin-left:14px">
                     <i class="fas fa-times-circle"></i> Quitar Filtro
                 </a>
             <?php endif; ?>
-            <?php if($filtro_tipo && $filtro_valor): ?>
+            <?php if ($filtro_tipo && $filtro_valor): ?>
                 <span class="filtro-activo">
                     <?php
-                        echo "<i class='fas fa-filter'></i> ";
-                        if ($filtro_tipo=='proveedor') {
-                            foreach($proveedores as $prov) if($prov['id']==$filtro_valor) echo "Proveedor: <b>".$prov['razon_social']."</b>";
-                        }
-                        if ($filtro_tipo=='area') {
-                            foreach($areas as $a) if($a['id']==$filtro_valor) echo "Área: <b>".$a['nombre_area']."</b>";
-                        }
+                    echo "<i class='fas fa-filter'></i> ";
+                    if ($filtro_tipo == 'proveedor') {
+                        foreach ($proveedores as $prov) if ($prov['id'] == $filtro_valor) echo "Proveedor: <b>" . $prov['razon_social'] . "</b>";
+                    }
+                    if ($filtro_tipo == 'area') {
+                        foreach ($areas as $a) if ($a['id'] == $filtro_valor) echo "Área: <b>" . $a['nombre_area'] . "</b>";
+                    }
                     ?>
                 </span>
             <?php endif; ?>
@@ -101,40 +105,48 @@ while ($row = mysqli_fetch_assoc($result)) $articulos[] = $row;
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Descripción</th>
-                        <th>Tipo Bien</th>
-                        <th>Área</th>
-                        <th>Proveedor</th>
-                        <th>Partida Presup.</th>
-                        <th>Partida Contable</th>
                         <th>UR</th>
                         <th>No. Inventario</th>
-                        <th>Modelo</th>
+                        <th>CABM</th>
+                        <th>Descripción CABM</th>
+                        <th>Descripción Detalle</th>
+                        <th>Tipo Bien</th>
+                        <th>Partida Presup.</th>
+                        <th>Partida Contable</th>
+                        <th>Proveedor</th>
                         <th>Serie</th>
+                        <th>Modelo</th>
                         <th>Marca</th>
                         <th>Estado Bien</th>
+                        <th>Ubicación</th>
+                        <th>RFC</th>
+                        <th>Nombre Responsable</th>
                         <th>Importe</th>
                     </tr>
                 </thead>
                 <tbody>
-                <?php foreach ($articulos as $art): ?>
-                    <tr>
-                        <td><?= $art['id'] ?></td>
-                        <td><?= htmlspecialchars($art['descripcion']) ?></td>
-                        <td><?= htmlspecialchars($art['tipo_bien']) ?></td>
-                        <td><?= htmlspecialchars($art['area']) ?></td>
-                        <td><?= htmlspecialchars($art['proveedor']) ?></td>
-                        <td><?= htmlspecialchars($art['partida_presupuestal']) ?></td>
-                        <td><?= htmlspecialchars($art['partida_contable']) ?></td>
-                        <td><?= htmlspecialchars($art['ur']) ?></td>
-                        <td><?= htmlspecialchars($art['no_inventario']) ?></td>
-                        <td><?= htmlspecialchars($art['modelo']) ?></td>
-                        <td><?= htmlspecialchars($art['serie']) ?></td>
-                        <td><?= htmlspecialchars($art['marca']) ?></td>
-                        <td><?= htmlspecialchars($art['estado_bien']) ?></td>
-                        <td>$<?= $art['importe'] ? number_format($art['importe'],2) : "0.00" ?></td>
-                    </tr>
-                <?php endforeach; ?>
+                    <?php foreach ($articulos as $art): ?>
+                        <tr>
+                            <td><?= htmlspecialchars($art['id']) ?></td>
+                            <td><?= htmlspecialchars($art['ur']) ?></td>
+                            <td><?= htmlspecialchars($art['no_inventario']) ?></td>
+                            <td><?= htmlspecialchars($art['cabm']) ?></td>
+                            <td><?= htmlspecialchars($art['descripcion']) ?></td>
+                            <td><?= htmlspecialchars($art['descripcion_detalle']) ?></td>
+                            <td><?= htmlspecialchars($art['tipo_bien']) ?></td>
+                            <td><?= htmlspecialchars($art['partida_presupuestal']) ?></td>
+                            <td><?= htmlspecialchars($art['partida_contable']) ?></td>
+                            <td><?= htmlspecialchars($art['proveedor']) ?></td>
+                            <td><?= htmlspecialchars($art['serie']) ?></td>
+                            <td><?= htmlspecialchars($art['modelo']) ?></td>
+                            <td><?= htmlspecialchars($art['marca']) ?></td>
+                            <td><?= htmlspecialchars($art['estado_bien']) ?></td>
+                            <td><?= htmlspecialchars($art['area']) ?></td>
+                            <td><?= htmlspecialchars($art['rfc']) ?></td>
+                            <td><?= htmlspecialchars($art['responsable']) ?></td>
+                            <td>$<?= $art['importe'] ? number_format($art['importe'], 2) : "0.00" ?></td>
+                        </tr>
+                    <?php endforeach; ?>
                 </tbody>
             </table>
         </div>
@@ -148,8 +160,8 @@ while ($row = mysqli_fetch_assoc($result)) $articulos[] = $row;
                         <label><i class="fas fa-industry"></i> Proveedor:</label>
                         <select name="filtro_valor" id="filtroProveedor" style="width:100%;">
                             <option value="">Seleccione un proveedor</option>
-                            <?php foreach($proveedores as $p): ?>
-                                <option value="<?= $p['id'] ?>" <?= ($filtro_tipo=='proveedor' && $filtro_valor==$p['id']) ? 'selected' : '' ?>>
+                            <?php foreach ($proveedores as $p): ?>
+                                <option value="<?= $p['id'] ?>" <?= ($filtro_tipo == 'proveedor' && $filtro_valor == $p['id']) ? 'selected' : '' ?>>
                                     <?= htmlspecialchars($p['razon_social']) ?>
                                 </option>
                             <?php endforeach; ?>
@@ -159,8 +171,8 @@ while ($row = mysqli_fetch_assoc($result)) $articulos[] = $row;
                         <label><i class="fas fa-building"></i> Área:</label>
                         <select name="filtro_valor_area" id="filtroArea" style="width:100%;">
                             <option value="">Seleccione un área</option>
-                            <?php foreach($areas as $a): ?>
-                                <option value="<?= $a['id'] ?>" <?= ($filtro_tipo=='area' && $filtro_valor==$a['id']) ? 'selected' : '' ?>>
+                            <?php foreach ($areas as $a): ?>
+                                <option value="<?= $a['id'] ?>" <?= ($filtro_tipo == 'area' && $filtro_valor == $a['id']) ? 'selected' : '' ?>>
                                     <?= htmlspecialchars($a['nombre_area']) ?>
                                 </option>
                             <?php endforeach; ?>
@@ -181,12 +193,12 @@ while ($row = mysqli_fetch_assoc($result)) $articulos[] = $row;
     <script>
         function aplicarFiltro(tipo) {
             // Limpia el otro campo para solo filtrar uno a la vez
-            if(tipo === 'proveedor') {
+            if (tipo === 'proveedor') {
                 document.getElementById('filtroArea').value = '';
                 let valor = document.getElementById('filtroProveedor').value;
                 if (!valor) return alert("Selecciona un proveedor válido.");
                 window.location = "listado.php?filtro_tipo=proveedor&filtro_valor=" + valor;
-            } else if(tipo === 'area') {
+            } else if (tipo === 'area') {
                 document.getElementById('filtroProveedor').value = '';
                 let valor = document.getElementById('filtroArea').value;
                 if (!valor) return alert("Selecciona un área válida.");
@@ -196,80 +208,168 @@ while ($row = mysqli_fetch_assoc($result)) $articulos[] = $row;
 
         // PDF igual que antes, solo se descargan los datos de la tabla actual (filtrada)
         function descargarPDFListado() {
-            const { jsPDF } = window.jspdf;
+            const {
+                jsPDF
+            } = window.jspdf;
             const doc = new jsPDF({
                 orientation: "landscape",
                 unit: "pt",
                 format: "A4"
             });
-            const logoUrl = '../../Logos/800px-ISSSTE_logo.png';
+
             const columnas = [
-                "ID", "Descripción", "Tipo Bien", "Área", "Proveedor",
-                "Partida Presup.", "Partida Contable", "UR", "No. Inventario",
-                "Modelo", "Serie", "Marca", "Estado Bien", "Importe"
+                "ID", "UR", "No. Inventario", "CABM", "Descripción CABM",
+                "Descripción Detalle", "Tipo Bien", "Partida Presup.", "Partida Contable",
+                "Proveedor", "Serie", "Modelo", "Marca", "Estado Bien", "Ubicación",
+                "RFC", "Nombre Responsable", "Importe"
             ];
-            // Solo las filas visibles en la tabla
+
             const filas = Array.from(document.querySelectorAll('#listadoTable tbody tr'))
                 .filter(tr => tr.style.display !== "none")
                 .map(tr => Array.from(tr.children).map(td => td.textContent.trim()));
 
-            const img = new window.Image();
-            img.crossOrigin = '';
-            img.src = logoUrl;
-            img.onload = function () {
-                doc.setFontSize(28);
-                doc.setTextColor('#5c1434');
-                doc.text("Listado de Artículos", 60, 65);
-                doc.addImage(img, "PNG", 670, 30, 140, 70);
+            const header = new Image();
+            header.src = '../../Logos/headerVale.png';
+            const footer = new Image();
+            footer.src = '../../Logos/footerVale.png';
 
-                doc.autoTable({
-                    startY: 110,
-                    head: [columnas],
-                    body: filas,
-                    styles: {
-                        fontSize: 10,
-                        cellPadding: 4,
-                        valign: 'middle'
-                    },
-                    headStyles: {
-                        fillColor: [92, 20, 52],
-                        textColor: 255,
-                        fontStyle: 'bold'
-                    },
-                    bodyStyles: {
-                        fillColor: [245, 241, 233],
-                        textColor: [44, 44, 44]
-                    },
-                    alternateRowStyles: {
-                        fillColor: [255,255,255]
-                    },
-                    margin: { left: 55, right: 30 }
-                });
+            header.onload = () => {
+                footer.onload = () => {
+                    const pageWidth = doc.internal.pageSize.getWidth();
+                    const pageHeight = doc.internal.pageSize.getHeight();
+                    const imgWidth = 520;
+                    const imgHeight = 55;
+                    const imgX = (pageWidth - imgWidth) / 2;
+                    const headerY = 15;
+                    const footerHeight = 45;
+                    const footerY = pageHeight - footerHeight - 5;
 
-                doc.save(`listado_articulos.pdf`);
-            };
-            img.onerror = function () {
-                generarPDFListadoSinLogo(doc, columnas, filas);
+                    doc.setFont('helvetica', 'bold');
+                    doc.setFontSize(18);
+                    doc.setTextColor(92, 20, 52);
+
+                    doc.autoTable({
+                        startY: 120,
+                        head: [columnas],
+                        body: filas,
+                        margin: {
+                            top: 95,
+                            bottom: footerHeight + 20,
+                            left: 15,
+                            right: 15
+                        },
+                        styles: {
+                            fontSize: 8,
+                            cellPadding: 3,
+                            valign: 'middle'
+                        },
+                        headStyles: {
+                            fillColor: [92, 20, 52],
+                            textColor: 255,
+                            fontStyle: 'bold'
+                        },
+                        bodyStyles: {
+                            fillColor: [245, 241, 233],
+                            textColor: [44, 44, 44]
+                        },
+                        alternateRowStyles: {
+                            fillColor: [255, 255, 255]
+                        },
+                        didDrawPage: function(data) {
+                            const pageNumber = doc.internal.getCurrentPageInfo().pageNumber;
+
+                            // 🖼️ Header en todas las páginas
+                            doc.addImage(header, 'PNG', imgX, headerY, imgWidth, imgHeight);
+
+                            // 📄 Footer en todas las páginas
+                            doc.addImage(footer, 'PNG', imgX, footerY, imgWidth, footerHeight);
+
+                            // 🏷️ Título solo en la primera página
+                            if (pageNumber === 1) {
+                                doc.setFont('helvetica', 'bold');
+                                doc.setFontSize(18);
+                                doc.setTextColor(92, 20, 52);
+                                doc.text("Listado de Bienes", pageWidth / 2, 95, {
+                                    align: 'center'
+                                });
+
+                                // 🔍 Texto de filtro si existe
+                                const filtroTexto = "<?= $filtro_tipo == 'area' ? 'Departamento: ' : ($filtro_tipo == 'proveedor' ? 'Proveedor: ' : '') ?>" +
+                                    "<?= $filtro_valor ? ($filtro_tipo == 'area'
+                                            ? (array_filter($areas, fn($a) => $a['id'] == $filtro_valor)[0]['nombre_area'] ?? '')
+                                            : (array_filter($proveedores, fn($p) => $p['id'] == $filtro_valor)[0]['razon_social'] ?? '')) : '' ?>";
+
+                                if (filtroTexto.trim() !== '') {
+                                    doc.setFont('helvetica', 'normal');
+                                    doc.setFontSize(12);
+                                    doc.setTextColor(40);
+                                    doc.text(filtroTexto, pageWidth / 2, 110, {
+                                        align: 'center'
+                                    });
+                                }
+                            }
+                            // 🔢 Número de página en todas las páginas
+                            doc.setFontSize(8);
+                            doc.setTextColor(100);
+                            doc.text(`Página ${pageNumber}`, pageWidth - 50, pageHeight - 10);
+
+                        }
+                    });
+
+                    doc.save("listado_articulos.pdf");
+                };
             };
         }
 
         // Excel igual (solo lo visible)
         function descargarExcelListado() {
             const columnas = [
-                "ID", "Descripción", "Tipo Bien", "Área", "Proveedor",
-                "Partida Presup.", "Partida Contable", "UR", "No. Inventario",
-                "Modelo", "Serie", "Marca", "Estado Bien", "Importe"
+                "ID", "UR", "No. Inventario", "CABM", "Descripción CABM",
+                "Descripción Detalle", "Tipo Bien", "Partida Presup.", "Partida Contable",
+                "Proveedor", "Serie", "Modelo", "Marca", "Estado Bien", "Ubicación",
+                "RFC", "Nombre Responsable", "Importe"
             ];
+
             const filas = Array.from(document.querySelectorAll('#listadoTable tbody tr'))
                 .filter(tr => tr.style.display !== "none")
                 .map(tr => Array.from(tr.children).map(td => td.textContent.trim()));
-            const data = [columnas, ...filas];
+
+            const data = [];
+
+            // Verificar si hay filtro aplicado
+            const params = new URLSearchParams(window.location.search);
+            const tipo = params.get('filtro_tipo');
+            const valor = params.get('filtro_valor');
+            let filtroTexto = '';
+
+            if (tipo && valor) {
+                // Buscar el texto completo en el <select> del filtro
+                let nombre = '';
+                if (tipo === 'proveedor') {
+                    const select = document.getElementById('filtroProveedor');
+                    const opt = select?.querySelector(`option[value="${valor}"]`);
+                    if (opt) nombre = opt.textContent.trim();
+                    filtroTexto = `Proveedor: ${nombre}`;
+                } else if (tipo === 'area') {
+                    const select = document.getElementById('filtroArea');
+                    const opt = select?.querySelector(`option[value="${valor}"]`);
+                    if (opt) nombre = opt.textContent.trim();
+                    filtroTexto = `Área: ${nombre}`;
+                }
+
+                if (filtroTexto) {
+                    data.push([filtroTexto]);
+                    data.push([]); // Espacio
+                }
+            }
+
+            data.push(columnas, ...filas);
+
             const ws = XLSX.utils.aoa_to_sheet(data);
             const wb = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(wb, ws, "Listado Artículos");
             XLSX.writeFile(wb, `listado_articulos.xlsx`);
         }
-
         function toggleMenu() {
             const sidebar = document.getElementById('sidebar');
             const mainContent = document.querySelector('.main-content');
@@ -278,6 +378,5 @@ while ($row = mysqli_fetch_assoc($result)) $articulos[] = $row;
         }
     </script>
 </body>
+
 </html>
-
-

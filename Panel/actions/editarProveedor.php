@@ -90,15 +90,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
                 <div class="form-group">
                     <label for="telefono1">Teléfono 1</label>
-                    <input type="tel" name="telefono1" id="telefono1" value="<?= htmlspecialchars($proveedor['telefono1']) ?>" required>
+                    <input type="text" name="telefono1" id="telefono1" value="<?= htmlspecialchars($proveedor['telefono1']) ?>">
                 </div>
                 <div class="form-group">
                     <label for="telefono2">Teléfono 2</label>
-                    <input type="tel" name="telefono2" id="telefono2" value="<?= htmlspecialchars($proveedor['telefono2']) ?>">
+                    <input type="text" name="telefono2" id="telefono2" value="<?= htmlspecialchars($proveedor['telefono2']) ?>">
                 </div>
                 <div class="form-group">
                     <label for="email">Correo Electrónico</label>
-                    <input type="email" name="email" id="email" value="<?= htmlspecialchars($proveedor['email']) ?>">
+                    <input type="text" name="email" id="email" value="<?= htmlspecialchars($proveedor['email']) ?>">
                 </div>
                 <div class="form-group">
                     <label for="estado">Estado</label>
@@ -113,11 +113,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
                 <div class="form-group">
                     <label for="contacto_telefono">Teléfono de Contacto</label>
-                    <input type="tel" name="contacto_telefono" id="contacto_telefono" value="<?= htmlspecialchars($proveedor['contacto_telefono']) ?>">
+                    <input type="text" name="contacto_telefono" id="contacto_telefono" value="<?= htmlspecialchars($proveedor['contacto_telefono']) ?>">
                 </div>
                 <div class="form-group">
                     <label for="contacto_email">Email de Contacto</label>
-                    <input type="email" name="contacto_email" id="contacto_email" value="<?= htmlspecialchars($proveedor['contacto_email']) ?>">
+                    <input type="text" name="contacto_email" id="contacto_email" value="<?= htmlspecialchars($proveedor['contacto_email']) ?>">
                 </div>
                 <div class="form-group">
                     <label for="contacto_estado">Estado del Contacto</label>

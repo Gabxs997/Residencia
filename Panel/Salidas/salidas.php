@@ -39,7 +39,7 @@
             <a href="../inventario.php" class="back-btn">
                 <i class="fas fa-arrow-left"></i>
             </a>
-            Salidas
+            Vales de Salidas
         </h1><br><br>
     
     <div class="sections">

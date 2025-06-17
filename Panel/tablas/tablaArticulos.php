@@ -27,12 +27,12 @@
             <i class="fas fa-bars"></i> <!-- Icono de menú para cerrar -->
         </div>
         <ul class="sidebar-menu">
-            <li><a href="../administrador.php"><i class="fas fa-home"></i> Inicio</a></li>
-            <li><a href="../catalogo.php"><i class="fas fa-book"></i> Catálogo</a></li>
-            <li><a href="../inventario.php"><i class="fas fa-boxes"></i> Inventario</a></li>
-            <li><a href="../reportes.php"><i class="fas fa-file-alt"></i> Reportes</a></li>
+            <li><a href="../administrador.php"><i class="fas fa-home"></i>Inicio</a></li>
+            <li><a href="../catalogo.php"><i class="fas fa-book"></i>Catálogo</a></li>
+            <li><a href="../inventario.php"><i class="fas fa-boxes"></i>Inventario</a></li>
+            <li><a href="../reportes.php"><i class="fas fa-file-alt"></i>Reportes</a></li>
             <li><a href="../crearUsuario.php"><i class="fas fa-user"></i>Usuarios</a></li>
-            <li><a href="../cerrarSesion.php"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</a></li>
+            <li><a href="../cerrarSesion.php"><i class="fas fa-sign-out-alt"></i>Cerrar sesión</a></li>
         </ul>
     </aside>
 
@@ -86,7 +86,8 @@
                     require_once __DIR__ . '/../../config/conexion.php';
                     $query = "SELECT a.*, 
                  p.razon_social AS proveedor, 
-                 u.nombre_area AS area
+                 u.nombre_area AS area,
+                 u.rfc AS rfc_responsable
           FROM articulos a
           LEFT JOIN proveedores p ON a.proveedor_id = p.id
           LEFT JOIN ubicaciones u ON a.ubicacion = u.id

@@ -27,12 +27,12 @@
             <i class="fas fa-bars"></i>
         </div>
         <ul class="sidebar-menu">
-            <li><a href="administrador.php"><i class="fas fa-home"></i> Inicio</a></li>
-            <li><a href="../catalogo.php"><i class="fas fa-book"></i> Catálogo</a></li>
-            <li><a href="../inventario.php"><i class="fas fa-boxes"></i> Inventario</a></li>
-            <li><a href="../reportes.php"><i class="fas fa-file-alt"></i> Reportes</a></li>
+            <li><a href="administrador.php"><i class="fas fa-home"></i>Inicio</a></li>
+            <li><a href="../catalogo.php"><i class="fas fa-book"></i>Catálogo</a></li>
+            <li><a href="../inventario.php"><i class="fas fa-boxes"></i>Inventario</a></li>
+            <li><a href="../reportes.php"><i class="fas fa-file-alt"></i>Reportes</a></li>
             <li><a href="../crearUsuario.php"><i class="fas fa-user"></i>Usuarios</a></li>
-            <li><a href="../cerrarSesion.php"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</a></li>
+            <li><a href="../cerrarSesion.php"><i class="fas fa-sign-out-alt"></i>Cerrar sesión</a></li>
         </ul>
     </aside>
 
@@ -73,13 +73,15 @@
                     require_once __DIR__ . '/../../config/conexion.php';
 
                     $query = "SELECT p.*, 
-                             c.nombre as contacto_nombre, 
-                             c.telefono1 as contacto_telefono, 
-                             c.email as contacto_email,
-                             c.estado as contacto_estado
-                             FROM proveedores p
-                             LEFT JOIN contactos_proveedores c ON p.id = c.proveedor_id
-                             ORDER BY p.id ASC";
+         c.nombre as contacto_nombre, 
+         c.telefono1 as contacto_telefono, 
+         c.email as contacto_email,
+         c.estado as contacto_estado
+         FROM proveedores p
+         LEFT JOIN contactos_proveedores c ON p.id = c.proveedor_id
+         WHERE p.eliminado = 0
+         ORDER BY p.id ASC";
+
                     $result = mysqli_query($conectar, $query);
 
                     while ($row = mysqli_fetch_assoc($result)):

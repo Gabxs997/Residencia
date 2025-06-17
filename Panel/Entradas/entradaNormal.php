@@ -31,12 +31,12 @@ $areaSeleccionada = isset($_GET['area']) && is_numeric($_GET['area']) ? intval($
     <aside class="sidebar" id="sidebar">
         <div class="menu-icon-close" onclick="toggleMenu()"><i class="fas fa-bars"></i></div>
         <ul class="sidebar-menu">
-            <li><a href="../administrador.php"><i class="fas fa-home"></i> Inicio</a></li>
-            <li><a href="../catalogo.php"><i class="fas fa-book"></i> Catálogo</a></li>
-            <li><a href="../inventario.php"><i class="fas fa-boxes"></i> Inventario</a></li>
-            <li><a href="../reportes.php"><i class="fas fa-file-alt"></i> Reportes</a></li>
+            <li><a href="../administrador.php"><i class="fas fa-home"></i>Inicio</a></li>
+            <li><a href="../catalogo.php"><i class="fas fa-book"></i>Catálogo</a></li>
+            <li><a href="../inventario.php"><i class="fas fa-boxes"></i>Inventario</a></li>
+            <li><a href="../reportes.php"><i class="fas fa-file-alt"></i>Reportes</a></li>
             <li><a href="../crearUsuario.php"><i class="fas fa-user"></i>Usuarios</a></li>
-            <li><a href="../cerrarSesion.php"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</a></li>
+            <li><a href="../cerrarSesion.php"><i class="fas fa-sign-out-alt"></i>Cerrar sesión</a></li>
         </ul>
     </aside>
     <main class="main-content">
@@ -62,9 +62,15 @@ $areaSeleccionada = isset($_GET['area']) && is_numeric($_GET['area']) ? intval($
                     <i class="fas fa-search search-icon"></i>
                     <input type="text" id="searchInput" placeholder="Buscar artículos..." class="search-input">
                 </div>
-                <button class="btn-generar" onclick="generarVale()">
-                    <i class="fas fa-file-alt"></i> Generar Vale
-                </button>
+                <div class="btn-container">
+                    <button class="btn-generar" onclick="generarVale()">
+                        <i class="fas fa-file-alt"></i> Generar Vale
+                    </button>
+                    <a href="historialVales.php" class="btn-historial">
+                        <i class="fas fa-clock"></i> Historial de Vales
+                    </a>
+                </div>
+
             </div>
 
             <div class="table-container">
@@ -97,7 +103,13 @@ $areaSeleccionada = isset($_GET['area']) && is_numeric($_GET['area']) ? intval($
                         while ($row = mysqli_fetch_assoc($result)):
                         ?>
                             <tr>
-                                <td><input type="checkbox" name="articulos[]" value="<?= $row['id'] ?>"></td>
+                                <td>
+                                    <input type="checkbox"
+                                        name="articulos[]"
+                                        value="<?= $row['id'] ?>"
+                                        data-proveedor="<?= htmlspecialchars($row['proveedor']) ?>">
+                                </td>
+
                                 <td><?= $row['id'] ?></td>
                                 <td><?= htmlspecialchars($row['descripcion']) ?></td>
                                 <td><?= htmlspecialchars($row['marca']) ?></td>
@@ -154,39 +166,28 @@ $areaSeleccionada = isset($_GET['area']) && is_numeric($_GET['area']) ? intval($
                         <input type="hidden" name="area_id" value="<?= htmlspecialchars($_GET['area'] ?? '') ?>">
                         <input type="hidden" name="articulos_ids" id="articulos_ids">
                         <input type="hidden" id="tieneContacto" value="<?= $tieneContacto ?>">
+                        <input type="hidden" name="proveedor" id="inputProveedor">
+
 
                         <?php
-                        // Obtener listado de jefes registrados
-                        $jefes = [];
-                        $resJefes = mysqli_query($conectar, "SELECT id, nombre FROM jefe_activo_fijo ORDER BY nombre");
-                        while ($row = mysqli_fetch_assoc($resJefes)) {
-                            $jefes[] = $row;
-                        }
-                        ?>
-
-                        <?php
-                        // Obtener listado de jefes registrados
-                        $jefes = [];
-                        $resJefes = mysqli_query($conectar, "SELECT id, nombre FROM jefe_activo_fijo ORDER BY nombre");
-                        while ($row = mysqli_fetch_assoc($resJefes)) {
-                            $jefes[] = $row;
+                        
+                        // Buscar jefe de activo fijo desde ubicaciones
+                        $jefeActivoFijo = '';
+                        $resJefeFijo = mysqli_query($conectar, "SELECT coordinador FROM ubicaciones WHERE UPPER(nombre_area) = 'ACTIVO FIJO' LIMIT 1");
+                        if ($resJefeFijo && mysqli_num_rows($resJefeFijo) > 0) {
+                            $jefeActivoFijo = mysqli_fetch_assoc($resJefeFijo)['coordinador'];
+                        } else {
+                            echo "<script>alert('⚠️ No existe el área ACTIVO FIJO. Por favor, créala en el catálogo de ubicaciones antes de generar un vale.'); window.location.href = '../catalogo.php';</script>";
+                            exit;
                         }
                         ?>
 
                         <div class="modal-field">
-                            <label for="jefe_manual">Nuevo Jefe de Activo Fijo:</label>
-                            <input class="input-activofijo" type="text" name="jefe_manual" id="jefe_manual" placeholder="Escribe un nombre nuevo...">
+                            <label>Jefe de Activo Fijo:</label>
+                            <p class="modal-static"><?= htmlspecialchars($jefeActivoFijo) ?></p>
+                            <input type="hidden" name="jefe_activo_fijo" value="<?= htmlspecialchars($jefeActivoFijo) ?>">
                         </div>
 
-                        <div class="modal-field">
-                            <label for="jefe_existente">O selecciona uno existente:</label>
-                            <select id="jefe_existente" name="jefe_existente" class="select-jefe">
-                                <option value="">-- Seleccionar jefe registrado --</option>
-                                <?php foreach ($jefes as $j): ?>
-                                    <option value="<?= htmlspecialchars($j['nombre']) ?>"><?= htmlspecialchars($j['nombre']) ?></option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
 
 
 
@@ -209,6 +210,12 @@ $areaSeleccionada = isset($_GET['area']) && is_numeric($_GET['area']) ? intval($
                             <label>Contacto del Proveedor:</label>
                             <p class="modal-static"><?= htmlspecialchars($infoCoordinador['contacto']) ?></p>
                         </div>
+
+                        <div class="modal-field">
+                            <label>Proveedor:</label>
+                            <p class="modal-static" id="nombreProveedor"></p>
+                        </div>
+
 
                         <div class="form-buttons">
                             <button type="button" class="btn-cancelar" onclick="cerrarModal()">Cancelar</button>
@@ -259,11 +266,29 @@ $areaSeleccionada = isset($_GET['area']) && is_numeric($_GET['area']) ? intval($
                 return;
             }
 
+            // 🔎 Verificar si todos los proveedores son iguales
+            const proveedores = seleccionados.map(cb => cb.getAttribute('data-proveedor'));
+            const proveedorUnico = proveedores.every(p => p === proveedores[0]);
+
+            if (!proveedorUnico) {
+                alert("⚠️ Solo se puede generar un vale con artículos del mismo proveedor.");
+                return;
+            }
+
+            // ✅ Todo bien, continuar
             const ids = seleccionados.map(cb => cb.value);
             document.getElementById('articulos_ids').value = ids.join(',');
 
+            const proveedor = proveedores[0];
+            document.getElementById('inputProveedor').value = proveedor;
+
+            const proveedorTexto = document.getElementById('nombreProveedor');
+            if (proveedorTexto) proveedorTexto.textContent = proveedor;
+
             document.getElementById('modalVale').style.display = 'flex';
         }
+
+
 
 
         //Script de cerrar modal

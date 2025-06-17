@@ -193,10 +193,7 @@
                             ?>
                         </select>
                     </div>
-                    <div>
-                        <label for="rfc">RFC (Responsable):</label>
-                        <input type="text" id="rfc" name="rfc" required>
-                    </div>
+                    
                 </div>
 
                 <!-- Sección 8: Importe, Observaciones (ancho completo) -->

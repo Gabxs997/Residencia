@@ -658,9 +658,6 @@ $quitarFiltroURL = basename($_SERVER['PHP_SELF']);
         }
 
 
-
-
-
         function descargarExcelHistorial() {
             const columnas = ["Área", "Artículo", "Solicitante", "Fecha", "Descripción", "Estatus"];
             const filas = Array.from(document.querySelectorAll('#tablaHistorial tbody tr'))

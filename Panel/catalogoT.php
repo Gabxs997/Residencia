@@ -25,10 +25,10 @@
             <i class="fas fa-bars"></i>
         </div>
         <ul class="sidebar-menu">
-            <li><a href="tecnico.php"><i class="fas fa-home"></i> Inicio</a></li>
-            <li><a href="#"><i class="fas fa-book"></i> Catálogo</a></li>
-            <li><a href="../Panel/reportesT.php"><i class="fas fa-file-alt"></i> Reportes</a></li>
-            <li><a href="../Panel/cerrarSesion.php"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</a></li>
+            <li><a href="tecnico.php"><i class="fas fa-home"></i>Inicio</a></li>
+            <li><a href="#"><i class="fas fa-book"></i>Catálogo</a></li>
+            <li><a href="../Panel/reportesT.php"><i class="fas fa-file-alt"></i>Reportes</a></li>
+            <li><a href="../Panel/cerrarSesion.php"><i class="fas fa-sign-out-alt"></i>Cerrar sesión</a></li>
         </ul>
     </aside>
 

@@ -17,7 +17,7 @@ $camposObligatorios = [
     'ur', 'noInventario', 'cabm', 'descripcion', 'descripcionDetalle',
     'partidaPresupuestal', 'partidaContable', 'fechaAlta', 'fechaDocumento',
     'tipoBien', 'noContrato', 'noFactura', 'proveedor_id', 'estadoBien',
-    'ubicacion', 'rfc', 'importe', 'origen'
+    'ubicacion', 'importe', 'origen'
 ];
 
 // 4. Validar campos obligatorios
@@ -83,7 +83,7 @@ if (mysqli_query($conectar, $sql)) {
     echo '
     <script>
     alert("SE GUARDARON CORRECTAMENTE LOS DATOS DEL ARTÍCULO");
-    window.location.href = "../forms/altaArticulo.php";
+    window.location.href = "../tablas/tablaArticulos.php";
     </script>
     ';
 } else {

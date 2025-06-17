@@ -3,7 +3,11 @@ require_once __DIR__ . '/../../config/conexion.php';
 
 $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
-$query = "SELECT * FROM articulos WHERE id = $id";
+// Consulta para obtener el artículo junto con el RFC del coordinador del área
+$query = "SELECT a.*, u.rfc AS rfc_responsable_area
+          FROM articulos a
+          LEFT JOIN ubicaciones u ON a.ubicacion = u.id
+          WHERE a.id = $id";
 $result = mysqli_query($conectar, $query);
 $articulo = mysqli_fetch_assoc($result);
 
@@ -11,6 +15,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $datos = array_map(function ($value) use ($conectar) {
         return mysqli_real_escape_string($conectar, $value);
     }, $_POST);
+
+    // Validar si el número de inventario ya existe en otro artículo
+   $noInventario = trim($datos['no_inventario']);
+
+// Solo si no_inventario está lleno, validamos
+if (!empty($noInventario)) {
+    $checkQuery = "SELECT id FROM articulos WHERE no_inventario = '$noInventario' AND id != $id LIMIT 1";
+    $checkResult = mysqli_query($conectar, $checkQuery);
+
+    if ($checkResult && mysqli_num_rows($checkResult) > 0) {
+        echo "<script>alert('Ya existe otro artículo con ese número de inventario.'); window.location.href = window.location.href;</script>";
+        exit;
+    }
+}
 
     $updateQuery = "UPDATE articulos SET 
         ur = '{$datos['ur']}',
@@ -31,7 +49,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         marca = '{$datos['marca']}',
         estado_bien = '{$datos['estado_bien']}',
         ubicacion = '{$datos['ubicacion']}',
-        rfc_responsable = '{$datos['rfc_responsable']}',
         importe = '{$datos['importe']}',
         observaciones = '{$datos['observaciones']}',
         origen = '{$datos['origen']}'
@@ -153,7 +170,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </select>
                     </div>
 
-                    <div class="form-group"><label>RFC</label><input type="text" name="rfc_responsable" value="<?= $articulo['rfc_responsable'] ?>"></div>
+                    <div class="form-group"><label>RFC del Responsable</label><input type="text" name="rfc_responsable" value="<?= htmlspecialchars($articulo['rfc_responsable_area']) ?>" readonly></div>
                     <div class="form-group"><label>Importe</label><input type="number" step="0.01" name="importe" value="<?= $articulo['importe'] ?>"></div>
                     <div class="form-group full-width"><label>Observaciones</label><textarea name="observaciones"><?= $articulo['observaciones'] ?></textarea></div>
                     <div class="form-group"><label>Origen</label><input type="text" name="origen" value="<?= $articulo['origen'] ?>"></div>

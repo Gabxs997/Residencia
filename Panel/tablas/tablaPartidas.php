@@ -27,12 +27,12 @@
             <i class="fas fa-bars"></i>
         </div>
         <ul class="sidebar-menu">
-            <li><a href="administrador.php"><i class="fas fa-home"></i> Inicio</a></li>
-            <li><a href="../catalogo.php"><i class="fas fa-book"></i> Catálogo</a></li>
-            <li><a href="../inventario.php"><i class="fas fa-boxes"></i> Inventario</a></li>
-            <li><a href="../reportes.php"><i class="fas fa-file-alt"></i> Reportes</a></li>
+            <li><a href="administrador.php"><i class="fas fa-home"></i>Inicio</a></li>
+            <li><a href="../catalogo.php"><i class="fas fa-book"></i>Catálogo</a></li>
+            <li><a href="../inventario.php"><i class="fas fa-boxes"></i>Inventario</a></li>
+            <li><a href="../reportes.php"><i class="fas fa-file-alt"></i>Reportes</a></li>
             <li><a href="../crearUsuario.php"><i class="fas fa-user"></i>Usuarios</a></li>
-            <li><a href="../cerrarSesion.php"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</a></li>
+            <li><a href="../cerrarSesion.php"><i class="fas fa-sign-out-alt"></i>Cerrar sesión</a></li>
         </ul>
     </aside>
 
@@ -66,7 +66,8 @@
                     <?php
                     require_once __DIR__ . '/../../config/conexion.php';
 
-                    $query = "SELECT * FROM partidas ORDER BY numero_partida, numero_subpartida ASC";
+                    $query = "SELECT * FROM partidas WHERE eliminado = 0 ORDER BY numero_partida, numero_subpartida ASC";
+
                     $result = mysqli_query($conectar, $query);
 
                     while ($row = mysqli_fetch_assoc($result)):
