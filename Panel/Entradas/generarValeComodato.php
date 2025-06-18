@@ -105,15 +105,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $pdf->SetFont('Arial', 'B', 10);
         $pdf->Write(6, utf8_decode($info['contacto'] . ' '));
         $pdf->SetFont('Arial', '', 10);
-        $pdf->Write(6, utf8_decode('DE LA EMPRESA '));
+        $pdf->Write(6, utf8_decode('REPRESENTANTE DE LA EMPRESA '));
         $pdf->SetFont('Arial', 'B', 10);
-        $pdf->Write(6, utf8_decode($info['razon_social'] . ', '));
+        $pdf->Write(6, utf8_decode($info['razon_social'] . ' '));
         $pdf->SetFont('Arial', '', 10);
-        $pdf->Write(6, utf8_decode('EL INGRESO AL HOSPITAL REGIONAL, AL ÁREA DE '));
+        $pdf->Write(6, utf8_decode('EL INGRESO AL HOSPITAL REGIONAL ESPECÍFICAMENTE AL ÁREA DE '));
         $pdf->SetFont('Arial', 'B', 10);
-        $pdf->Write(6, utf8_decode(strtoupper($info['nombre_area']) . ', '));
+        $pdf->Write(6, utf8_decode(strtoupper($info['nombre_area']) . '. '));
         $pdf->SetFont('Arial', '', 10);
-        $pdf->Write(6, utf8_decode('EL BIEN CUYAS CARACTERÍSTICAS SE RELACIONAN A CONTINUACIÓN.'));
+        $pdf->Write(6, utf8_decode('EL BIEN CUYAS CARACTERÍSTICAS SE RELACIONAN A CONTINUACIÓN. EL CUAL ENTRA POR COMODATO.'));
         $pdf->Ln(15);
 
         $wDesc = 60;
@@ -230,7 +230,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
 
-        $nombreArchivo = "vale_normal_" . date('Ymd_His') . "_id{$id}.pdf";
+        $nombreArchivo = "vale_comodato_" . date('Ymd_His') . "_id{$id}.pdf";
 
 
         $path = __DIR__ . "/../../doc/$nombreArchivo";
@@ -254,7 +254,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $pdf->Output('F', $path);
 
-        header("Location: historialVales.php?origen=normal");
+        header("Location: historialVales.php?origen=comodato");
         exit;
     } else {
         echo "<script>alert('Error: Datos incompletos'); history.back();</script>";

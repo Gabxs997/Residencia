@@ -32,12 +32,28 @@ $userQuery = mysqli_query($conectar, "SELECT * FROM usuarios_departamento WHERE 
 $user = mysqli_fetch_assoc($userQuery);
 
 if ($user && password_verify($contrasena, $user['contrasena'])) {
+    // Validar si su área está activa
+    $areaId = intval($user['area_id']);
+    $checkArea = mysqli_query($conectar, "SELECT eliminado FROM ubicaciones WHERE id = $areaId LIMIT 1");
+    $area = mysqli_fetch_assoc($checkArea);
+
+    if ((int)$area['eliminado'] === 1) {
+        echo "<script>
+            alert('⚠️ Su área está inactiva. Por favor, contacte al jefe de activo fijo para reactivarla.');
+            window.location.href = '../index.php';
+        </script>";
+        exit;
+    }
+
+    // Área activa, continuar login
     $_SESSION['area_id'] = $user['area_id'];
     $_SESSION['usuario'] = $user['usuario'];
     $_SESSION['rol'] = 'usuario';
     header("Location: ../Panel/departamentos.php");
     exit;
 }
+
+
 
 // 4. Fallo en autenticación
 echo "

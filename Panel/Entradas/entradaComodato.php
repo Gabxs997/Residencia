@@ -8,10 +8,9 @@ while ($row = mysqli_fetch_assoc($res)) {
     $areas[] = $row;
 }
 
-// Valor inicial -1 para evitar mostrar la tabla sin selección
 $areaSeleccionada = isset($_GET['area']) && is_numeric($_GET['area']) ? intval($_GET['area']) : -1;
 
-// Verificar si el área está eliminada
+// Validaciones de área y proveedor (idénticas al normal)
 $resArea = mysqli_query($conectar, "SELECT eliminado FROM ubicaciones WHERE id = $areaSeleccionada LIMIT 1");
 if ($resArea && mysqli_num_rows($resArea) > 0) {
     $row = mysqli_fetch_assoc($resArea);
@@ -20,7 +19,6 @@ if ($resArea && mysqli_num_rows($resArea) > 0) {
         exit;
     }
 }
-// Verificar si el proveedor del área está eliminado
 $proveedorNombre = '';
 $consultaProveedor = mysqli_query($conectar, "
     SELECT p.razon_social, p.eliminado
@@ -39,13 +37,13 @@ if ($consultaProveedor && mysqli_num_rows($consultaProveedor) > 0) {
     }
 }
 
-
 ?>
+
 <html lang="es">
 
 <head>
     <meta charset="UTF-8">
-    <title>Vales de Entrada Normales</title>
+    <title>Vales de Entrada Comodato</title>
     <link rel="stylesheet" href="../../CSS/tablas.css">
     <link rel="stylesheet" href="../../CSS/admin.css">
     <link rel="stylesheet" href="../../CSS/inventario.css">
@@ -70,7 +68,7 @@ if ($consultaProveedor && mysqli_num_rows($consultaProveedor) > 0) {
         </ul>
     </aside>
     <main class="main-content">
-        <h1><a href="entradas.php" class="back-btn"><i class="fas fa-arrow-left"></i></a> Vales de entrada (normales)</h1><br><br>
+        <h1><a href="entradas.php" class="back-btn"><i class="fas fa-arrow-left"></i></a> Vales de entrada (comodato)</h1><br><br>
 
         <form method="get" class="form-area-select">
             <label for="area" class="area-label">Área:</label>
@@ -96,7 +94,7 @@ if ($consultaProveedor && mysqli_num_rows($consultaProveedor) > 0) {
                     <button class="btn-generar" onclick="generarVale()">
                         <i class="fas fa-file-alt"></i> Generar Vale
                     </button>
-                    <a href="historialVales.php?origen=normal" class="btn-historial">
+                    <a href="historialVales.php?origen=comodato" class="btn-historial">
                         <i class="fas fa-clock"></i> Historial de Vales
                     </a>
                 </div>
@@ -192,7 +190,7 @@ if ($consultaProveedor && mysqli_num_rows($consultaProveedor) > 0) {
                     </span>
                     <h2 class="modal-title">Generar Vale de Entrada</h2>
 
-                    <form id="formVale" method="POST" action="generarValeNormal.php">
+                    <form id="formVale" method="POST" action="generarValeComodato.php">
                         <input type="hidden" name="area_id" value="<?= htmlspecialchars($_GET['area'] ?? '') ?>">
                         <input type="hidden" name="articulos_ids" id="articulos_ids">
                         <input type="hidden" id="tieneContacto" value="<?= $tieneContacto ?>">

@@ -1,5 +1,13 @@
 <?php
 require_once __DIR__ . '/../config/conexion.php';
+
+// Verificar si hay alguna área eliminada
+$resAreaInactiva = mysqli_query($conectar, "SELECT nombre_area FROM ubicaciones WHERE eliminado = 1 LIMIT 1");
+if ($resAreaInactiva && mysqli_num_rows($resAreaInactiva) > 0) {
+    $areaInactiva = mysqli_fetch_assoc($resAreaInactiva);
+    echo "<script>alert('⚠️ El área \"{$areaInactiva['nombre_area']}\" está inactiva. Por favor, reactívala desde el catálogo de ubicaciones.'); window.location.href = 'forms/altaUbicacion.php';</script>";
+    exit;
+}
 ?>
 
 <html lang="es">

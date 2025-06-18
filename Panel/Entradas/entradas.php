@@ -45,7 +45,7 @@
     <div class="sections">
         <ul>
             <li><a href="entradaNormal.php">Normal</a></li>
-            <li><a href="comodato.php">Comodato</a></li>
+            <li><a href="entradaComodato.php">Comodato</a></li>
             <li><a href="articuloPersonal.php">Artículos personales</a></li>
         </ul>
     </div>
